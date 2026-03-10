@@ -1,0 +1,39 @@
+/* ================================================================
+   Base Layer — Resets & Overrides
+   ================================================================ */
+
+@layer base {
+    body {
+        @apply bg-bovi-beige-100 text-bovi-dark antialiased;
+    }
+
+    [type='text']:focus,
+    [type='email']:focus,
+    [type='url']:focus,
+    [type='password']:focus,
+    [type='number']:focus,
+    [type='date']:focus,
+    [type='datetime-local']:focus,
+    [type='month']:focus,
+    [type='search']:focus,
+    [type='tel']:focus,
+    [type='time']:focus,
+    [type='week']:focus,
+    textarea:focus,
+    select:focus {
+        @apply border-bovi-green-600 ring-2 ring-bovi-green-600/20;
+    }
+
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+        @apply bg-bovi-beige-100;
+    }
+    ::-webkit-scrollbar-thumb {
+        @apply bg-bovi-brown-600/30 rounded-full;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        @apply bg-bovi-brown-600/50;
+    }
+}

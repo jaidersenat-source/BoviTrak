@@ -1,0 +1,10 @@
+/* ================================================================
+   Layout — Header
+   ================================================================ */
+
+@layer components {
+    .header-bovi {
+        @apply bg-white border-b border-gray-200
+               shadow-md sticky top-0 z-50;
+    }
+}

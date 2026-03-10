@@ -1,0 +1,27 @@
+/* ================================================================
+   Component Layer — Alerts
+   ================================================================ */
+
+@layer components {
+    .alert-success {
+        @apply bg-green-50 border-l-4 border-green-500
+               rounded-lg shadow-sm p-4
+               animate-fade-in;
+    }
+
+    .alert-danger {
+        @apply bg-red-50 border-l-4 border-red-500
+               rounded-lg shadow-md p-4
+               animate-fade-in;
+    }
+
+    .alert-warning {
+        @apply bg-amber-50 border-l-4 border-amber-400
+               rounded p-4;
+    }
+
+    .alert-info {
+        @apply bg-blue-50 border-l-4 border-blue-400
+               rounded-lg p-4;
+    }
+}

@@ -1,0 +1,129 @@
+/* ================================================================
+   Component Layer — Buttons
+   ================================================================ */
+
+@layer components {
+    .btn-bovi-primary {
+        @apply inline-flex items-center justify-center gap-2
+               px-6 py-2.5 rounded-lg
+               bg-bovi-green-800 text-white font-semibold text-sm
+               shadow-bovi
+               transition-all duration-200 ease-in-out
+               hover:bg-bovi-green-600 hover:shadow-bovi-lg
+               focus:outline-none focus:ring-2 focus:ring-bovi-green-600 focus:ring-offset-2
+               active:bg-bovi-green-900 active:scale-[0.98]
+               disabled:opacity-50 disabled:cursor-not-allowed;
+    }
+
+    .btn-bovi-gradient {
+        @apply inline-flex items-center justify-center gap-2
+               px-6 py-2.5 rounded-lg
+               bg-gradient-bovi-green text-white font-semibold text-sm
+               shadow-bovi
+               transition-all duration-200 ease-in-out
+               hover:shadow-bovi-lg hover:brightness-110
+               focus:outline-none focus:ring-2 focus:ring-bovi-green-600 focus:ring-offset-2
+               active:brightness-90 active:scale-[0.98]
+               disabled:opacity-50 disabled:cursor-not-allowed;
+    }
+
+    .btn-bovi-secondary {
+        @apply inline-flex items-center justify-center gap-2
+               px-6 py-2.5 rounded-lg
+               bg-bovi-brown-600 text-white font-semibold text-sm
+               shadow-sm
+               transition-all duration-200 ease-in-out
+               hover:bg-bovi-brown-800 hover:shadow-md
+               focus:outline-none focus:ring-2 focus:ring-bovi-brown-600 focus:ring-offset-2
+               active:bg-bovi-brown-900 active:scale-[0.98]
+               disabled:opacity-50 disabled:cursor-not-allowed;
+    }
+
+    .btn-bovi-brown-gradient {
+        @apply inline-flex items-center justify-center gap-2
+               px-6 py-2.5 rounded-lg
+               bg-gradient-bovi-brown text-white font-semibold text-sm
+               shadow-sm
+               transition-all duration-200 ease-in-out
+               hover:shadow-md hover:brightness-110
+               focus:outline-none focus:ring-2 focus:ring-bovi-brown-600 focus:ring-offset-2
+               active:brightness-90 active:scale-[0.98]
+               disabled:opacity-50 disabled:cursor-not-allowed;
+    }
+
+    .btn-bovi-amber {
+        @apply inline-flex items-center justify-center gap-2
+               px-6 py-2.5 rounded-lg
+               bg-gradient-bovi-amber text-white font-semibold text-sm
+               shadow-sm
+               transition-all duration-200 ease-in-out
+               hover:shadow-md hover:brightness-110
+               focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2
+               active:brightness-90 active:scale-[0.98]
+               disabled:opacity-50 disabled:cursor-not-allowed;
+    }
+
+    .btn-bovi-outline {
+        @apply inline-flex items-center justify-center gap-2
+               px-6 py-2.5 rounded-lg
+               border-2 border-bovi-green-800 text-bovi-green-800
+               bg-transparent font-semibold text-sm
+               transition-all duration-200 ease-in-out
+               hover:bg-bovi-green-800 hover:text-white
+               focus:outline-none focus:ring-2 focus:ring-bovi-green-600 focus:ring-offset-2
+               active:scale-[0.98]
+               disabled:opacity-50 disabled:cursor-not-allowed;
+    }
+
+    .btn-bovi-danger {
+        @apply inline-flex items-center justify-center gap-2
+               px-6 py-2.5 rounded-lg
+               bg-red-600 text-white font-semibold text-sm
+               shadow-sm
+               transition-all duration-200 ease-in-out
+               hover:bg-red-700 hover:shadow-md
+               focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2
+               active:bg-red-800 active:scale-[0.98]
+               disabled:opacity-50 disabled:cursor-not-allowed;
+    }
+
+    .btn-bovi-ghost {
+        @apply inline-flex items-center justify-center gap-2
+               px-4 py-2 rounded-lg
+               text-bovi-green-800 font-medium text-sm
+               transition-all duration-200 ease-in-out
+               hover:bg-bovi-green-50 hover:text-bovi-green-600
+               focus:outline-none focus:ring-2 focus:ring-bovi-green-600/20
+               active:bg-bovi-green-100;
+    }
+
+    .btn-bovi-green-light {
+        @apply inline-flex items-center justify-center gap-2
+               px-6 py-2.5 rounded-lg
+               bg-bovi-green-600 text-white font-semibold text-sm
+               shadow-sm
+               transition-all duration-200 ease-in-out
+               hover:bg-bovi-green-700 hover:shadow-md
+               focus:outline-none focus:ring-2 focus:ring-bovi-green-600 focus:ring-offset-2
+               active:scale-[0.98]
+               disabled:opacity-50 disabled:cursor-not-allowed;
+    }
+
+    .btn-sm {
+        @apply px-3 py-1.5 text-xs;
+    }
+    .btn-lg {
+        @apply px-8 py-3 text-base;
+    }
+
+    .btn-scroll-top {
+        @apply fixed bottom-6 right-6 z-50
+               w-12 h-12 rounded-full
+               bg-bovi-green-800 text-white
+               flex items-center justify-center
+               shadow-bovi-lg
+               transition-all duration-300
+               hover:bg-bovi-green-600 hover:shadow-bovi-xl hover:-translate-y-1
+               focus:outline-none focus:ring-2 focus:ring-bovi-green-600 focus:ring-offset-2;
+    }
+}

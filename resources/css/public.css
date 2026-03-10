@@ -1,0 +1,25 @@
+/* ================================================================
+   BOVITRACK — Public CSS (Páginas públicas sin auth)
+   Entry point: resources/css/public.css
+   Sin Bootstrap CSS (no se necesita), solo iconos
+   ================================================================ */
+
+/* ── Vendor ─────────────────────────────────────────────────────── */
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+/* ── Base ───────────────────────────────────────────────────────── */
+@import './base/_reset.css';
+@import './base/_typography.css';
+
+/* ── Components (solo los necesarios para público) ──────────────── */
+@import './components/_buttons.css';
+@import './components/_cards.css';
+@import './components/_badges.css';
+
+/* ── Utilities ──────────────────────────────────────────────────── */
+@import './utilities/_animations.css';
+
+/* ── Tailwind Layers ────────────────────────────────────────────── */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

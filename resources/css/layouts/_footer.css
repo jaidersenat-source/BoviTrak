@@ -1,0 +1,26 @@
+/* ================================================================
+   Layout — Footer
+   ================================================================ */
+
+@layer components {
+    .footer-bovi {
+        @apply bg-bovi-green-950 text-white mt-auto;
+    }
+
+    .footer-link {
+        @apply text-gray-300
+               hover:text-bovi-green-600
+               transition-colors duration-200;
+    }
+
+    .footer-icon {
+        @apply text-bovi-brown-600;
+    }
+
+    .footer-badge {
+        @apply inline-flex items-center gap-2
+               bg-white/20 backdrop-blur-sm
+               rounded-full px-4 py-1.5
+               text-sm;
+    }
+}

@@ -1,0 +1,56 @@
+/* ================================================================
+   Component Layer — Badges
+   ================================================================ */
+
+@layer components {
+    .badge-base {
+        @apply inline-flex items-center gap-1.5
+               px-3 py-1 rounded-full
+               text-xs font-semibold
+               transition-colors duration-200;
+    }
+
+    .badge-green {
+        @apply badge-base bg-bovi-green-600 text-white;
+    }
+
+    .badge-brown {
+        @apply badge-base bg-bovi-brown-600 text-white;
+    }
+
+    .badge-amber {
+        @apply badge-base bg-amber-600 text-white;
+    }
+
+    .badge-light-green {
+        @apply badge-base bg-bovi-green-100 text-bovi-green-800
+               border border-bovi-green-600;
+    }
+
+    .badge-outline {
+        @apply badge-base bg-white/20 text-white backdrop-blur-sm;
+    }
+
+    .badge-macho {
+        @apply badge-base bg-bovi-green-600 text-white;
+    }
+
+    .badge-hembra {
+        @apply badge-base bg-bovi-brown-300 text-bovi-brown-800;
+    }
+
+    .badge-nfc {
+        @apply inline-flex items-center gap-2
+               bg-bovi-green-50 border border-bovi-green-600
+               rounded-full px-4 py-1.5
+               text-sm font-medium text-bovi-green-800;
+    }
+
+    .badge-stats {
+        @apply inline-flex items-center gap-1.5
+               rounded-full px-3 py-1
+               text-xs font-bold text-bovi-green-800
+               border border-bovi-green-600;
+        background: linear-gradient(to right, #f0f7f0, #f9fdf9);
+    }
+}

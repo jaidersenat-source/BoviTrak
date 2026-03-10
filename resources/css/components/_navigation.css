@@ -1,0 +1,82 @@
+/* ================================================================
+   Component Layer — Navigation
+   ================================================================ */
+
+@layer components {
+    .nav-logo-glow {
+        @apply absolute inset-0 rounded-full opacity-0
+               bg-bovi-green-600
+               transition-opacity duration-300
+               group-hover:opacity-20;
+        filter: blur(12px);
+    }
+
+    .nav-brand-text {
+        background: linear-gradient(to right, #1F4D2B, #3E7C47);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        @apply text-2xl font-extrabold tracking-tight;
+    }
+
+    .nav-link-active {
+        @apply border-b-2 border-bovi-green-800
+               text-bovi-green-800 font-semibold;
+    }
+
+    .nav-link-inactive {
+        @apply border-b-2 border-transparent
+               text-gray-500
+               hover:text-bovi-green-700 hover:border-bovi-green-200
+               transition-colors duration-200;
+    }
+
+    .nav-mobile-active {
+        @apply flex items-center px-4 py-3 rounded-lg
+               bg-bovi-green-800 text-white shadow-md
+               transition-all duration-200;
+    }
+
+    .nav-mobile-inactive {
+        @apply flex items-center px-4 py-3 rounded-lg
+               text-gray-700
+               transition-all duration-200
+               hover:bg-bovi-green-50 hover:text-bovi-green-800;
+    }
+
+    .avatar-bovi {
+        @apply w-8 h-8 rounded-full
+               bg-gradient-bovi-green-v
+               flex items-center justify-center
+               text-white text-sm font-bold;
+    }
+
+    .avatar-bovi-lg {
+        @apply w-10 h-10 rounded-full
+               bg-gradient-bovi-green-v
+               flex items-center justify-center
+               text-white text-lg font-bold;
+    }
+
+    .nav-dropdown-trigger {
+        @apply inline-flex items-center gap-2
+               px-4 py-2 rounded-lg
+               border border-gray-300
+               text-sm font-semibold text-gray-700
+               bg-white
+               transition-all duration-200
+               hover:bg-gray-50 hover:shadow-md
+               focus:outline-none focus:ring-2 focus:ring-bovi-green-600/30
+               shadow-sm;
+    }
+
+    .nav-dropdown-header {
+        @apply px-4 py-3 border-b border-gray-200;
+        background: linear-gradient(to right, #f0f7f0, #f9fdf9);
+    }
+
+    .nav-stats-badge {
+        @apply flex items-center px-4 py-2 rounded-lg border border-bovi-green-600;
+        background: linear-gradient(to right, #f0f7f0, #f9fdf9);
+    }
+}

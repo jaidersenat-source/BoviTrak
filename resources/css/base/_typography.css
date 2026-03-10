@@ -1,0 +1,18 @@
+/* ================================================================
+   Base Layer — Typography
+   ================================================================ */
+
+@layer base {
+    h1, h2, h3, h4, h5, h6 {
+        @apply font-sans text-bovi-dark;
+    }
+
+    h1 { @apply text-3xl font-bold; }
+    h2 { @apply text-2xl font-bold; }
+    h3 { @apply text-xl font-semibold; }
+    h4 { @apply text-lg font-semibold; }
+
+    a {
+        @apply transition-colors duration-200;
+    }
+}
