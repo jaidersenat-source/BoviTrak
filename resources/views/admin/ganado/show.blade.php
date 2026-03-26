@@ -54,9 +54,23 @@
                     <!-- Stats rápidas -->
                     <div class="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-white/20">
                         @if($animal->fecha_nacimiento)
+                        @php
+                            $birth = \Carbon\Carbon::parse($animal->fecha_nacimiento);
+                            $diff = $birth->diff(\Carbon\Carbon::now());
+                            $years = $diff->y;
+                            $months = $diff->m;
+                        @endphp
                         <div class="text-center">
-                            <p class="text-3xl font-bold">{{ \Carbon\Carbon::parse($animal->fecha_nacimiento)->age }}</p>
-                            <p class="text-sm mt-1 text-bovi-green-200">años</p>
+                            <p class="text-3xl font-bold">
+                                @if($years > 0) {{ $years }} @else {{ $months }} @endif
+                            </p>
+                            <p class="text-sm mt-1 text-bovi-green-200">
+                                @if($years > 0)
+                                    {{ $years }} año{{ $years > 1 ? 's' : '' }}@if($months) y {{ $months }} mes{{ $months > 1 ? 'es' : '' }}@endif
+                                @else
+                                    {{ $months }} mes{{ $months > 1 ? 'es' : '' }}
+                                @endif
+                            </p>
                         </div>
                         @endif
                         @if($animal->peso_aproximado)
@@ -122,18 +136,72 @@
                                 </div>
                             </div>
 
+                             <div class="group">
+                                <label class="text-xs font-semibold uppercase tracking-wider mb-2 block text-bovi-brown-600">Propósito</label>
+                                <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold text-white {{ $animal->proposito === 'carne, leche, Doble proposito' ? 'bg-bovi-green-600' : 'bg-bovi-brown-300' }}">
+                                        {{ ucfirst($animal->proposito) }}
+                                    </span>
+                                </div>
+                            </div>
+
+                             <div class="group">
+                                <label class="text-xs font-semibold uppercase tracking-wider mb-2 block text-bovi-brown-600">Estado del Animal</label>
+                                <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold text-white {{ $animal->estado === 'activo' ? 'bg-bovi-green-600' : 'bg-bovi-brown-300' }}">
+                                        {{ ucfirst($animal->estado) }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            
                             <!-- Fecha de Nacimiento -->
                             @if($animal->fecha_nacimiento)
                             <div class="group">
                                 <label class="text-xs font-semibold uppercase tracking-wider mb-2 block text-bovi-brown-600">Fecha de Nacimiento</label>
                                 <div class="p-4 bg-gray-50 rounded-lg border border-gray-200 transition-colors hover:border-bovi-green-600">
-                                    <p class="text-lg font-semibold text-gray-800">{{ \Carbon\Carbon::parse($animal->fecha_nacimiento)->format('d/m/Y') }}</p>
-                                    <p class="text-xs text-gray-500 mt-1">
-                                        <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                        {{ \Carbon\Carbon::parse($animal->fecha_nacimiento)->age }} años de edad
-                                    </p>
+                                        @php
+                                            $birth = \Carbon\Carbon::parse($animal->fecha_nacimiento);
+                                            $diff = $birth->diff(\Carbon\Carbon::now());
+                                            $years = $diff->y;
+                                            $months = $diff->m;
+                                            $ageText = '';
+                                            if ($years > 0) { $ageText .= $years.' año'.($years > 1 ? 's' : ''); }
+                                            if ($months > 0) { $ageText .= ($years > 0 ? ' y ' : '') . $months.' mes'.($months > 1 ? 'es' : ''); }
+                                            if ($ageText === '') { $ageText = '0 meses'; }
+                                        @endphp
+                                        <p class="text-lg font-semibold text-gray-800">{{ $birth->format('d/m/Y') }}</p>
+                                            <p class="text-xs text-gray-500 mt-1">
+                                                <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                </svg>
+                                                {{ $ageText }}
+                                            </p>
+                                </div>
+                            </div>
+                            @endif
+
+                             @if($animal->fecha_ingreso_hato)
+                            <div class="group">
+                                <label class="text-xs font-semibold uppercase tracking-wider mb-2 block text-bovi-brown-600">Fecha de Ingreso al Hato</label>
+                                <div class="p-4 bg-gray-50 rounded-lg border border-gray-200 transition-colors hover:border-bovi-green-600">
+                                            @php
+                                                $entry = \Carbon\Carbon::parse($animal->fecha_ingreso_hato);
+                                                $diff_in = $entry->diff(\Carbon\Carbon::now());
+                                                $years_in = $diff_in->y;
+                                                $months_in = $diff_in->m;
+                                                $ageInText = '';
+                                                if ($years_in > 0) { $ageInText .= $years_in.' año'.($years_in > 1 ? 's' : ''); }
+                                                if ($months_in > 0) { $ageInText .= ($years_in > 0 ? ' y ' : '') . $months_in.' mes'.($months_in > 1 ? 'es' : ''); }
+                                                if ($ageInText === '') { $ageInText = '0 meses'; }
+                                            @endphp
+                                            <p class="text-lg font-semibold text-gray-800">{{ $entry->format('d/m/Y') }}</p>
+                                            <p class="text-xs text-gray-500 mt-1">
+                                                <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                </svg>
+                                                {{ $ageInText }} en el hato
+                                            </p>
                                 </div>
                             </div>
                             @endif

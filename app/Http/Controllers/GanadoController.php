@@ -29,7 +29,7 @@ class GanadoController extends Controller
         // Paginación para mejorar rendimiento - 12 animales por página
         $animals = $query->orderBy('created_at', 'desc')->paginate(12);
         
-        return view('dashboard', compact('animals'));
+        return view('admin.ganado.index', compact('animals'));
     }
 
     /**
@@ -37,7 +37,7 @@ class GanadoController extends Controller
      */
     public function create()
     {
-        return view('admin.create');
+        return view('admin.ganado.create');
     }
 
     /**
@@ -52,7 +52,10 @@ class GanadoController extends Controller
                 'nombre' => 'nullable|string|max:255',
                 'raza' => 'required|string|max:255',
                 'sexo' => 'required|in:macho,hembra',
+                'proposito' => 'required|in:carne,leche,doble_proposito',
+                'estado' => 'required|in:activo,vendido,muerto',
                 'fecha_nacimiento' => 'nullable|date',
+                'fecha_ingreso_hato' => 'nullable|date',
                 'peso_aproximado' => 'nullable|numeric|min:0',
                 'color' => 'nullable|string|max:255',
                 'observaciones' => 'nullable|string',
@@ -67,7 +70,10 @@ class GanadoController extends Controller
                 'nombre' => $validated['nombre'] ?? null,
                 'raza' => $validated['raza'],
                 'sexo' => $validated['sexo'],
+                'proposito' => $validated['proposito'] ?? null,
+                'estado' => $validated['estado'] ?? 'activo',
                 'fecha_nacimiento' => $validated['fecha_nacimiento'] ?? null,
+                'fecha_ingreso_hato' => $validated['fecha_ingreso_hato'] ?? null,
                 'peso_aproximado' => $validated['peso_aproximado'] ?? null,
                 'color' => $validated['color'] ?? null,
                 'observaciones' => $validated['observaciones'] ?? null,
@@ -115,7 +121,7 @@ class GanadoController extends Controller
     public function show($id)
     {
         $animal = Animal::findOrFail($id);
-        return view('admin.show', compact('animal'));
+        return view('admin.ganado.show', compact('animal'));
     }
 
     /**
@@ -124,7 +130,7 @@ class GanadoController extends Controller
     public function edit($id)
     {
         $animal = Animal::findOrFail($id);
-        return view('admin.edit', compact('animal'));
+        return view('admin.ganado.edit', compact('animal'));
     }
 
     /**
@@ -140,7 +146,10 @@ class GanadoController extends Controller
                 'nombre' => 'nullable|string|max:255',
                 'raza' => 'required|string|max:255',
                 'sexo' => 'required|in:macho,hembra',
+                'proposito' => 'required|in:carne,leche,doble_proposito',
+                'estado' => 'required|in:activo,vendido,muerto',
                 'fecha_nacimiento' => 'nullable|date',
+                'fecha_ingreso_hato' => 'nullable|date',
                 'peso_aproximado' => 'nullable|numeric|min:0',
                 'color' => 'nullable|string|max:255',
                 'observaciones' => 'nullable|string',
@@ -154,7 +163,10 @@ class GanadoController extends Controller
                 'nombre' => $validated['nombre'] ?? null,
                 'raza' => $validated['raza'],
                 'sexo' => $validated['sexo'],
+                'proposito' => $validated['proposito'],
+                'estado' => $validated['estado'],
                 'fecha_nacimiento' => $validated['fecha_nacimiento'] ?? null,
+                'fecha_ingreso_hato' => $validated['fecha_ingreso_hato'] ?? null,
                 'peso_aproximado' => $validated['peso_aproximado'] ?? null,
                 'color' => $validated['color'] ?? null,
                 'observaciones' => $validated['observaciones'] ?? null,
@@ -180,7 +192,7 @@ class GanadoController extends Controller
                 $animal->update(['foto_general' => $path]);
             }
 
-            return redirect()->route('dashboard')->with([
+            return redirect()->route('admin.ganado.index')->with([
                 'success' => 'Ganado actualizado correctamente.',
                 'animal_saved' => [
                     'id' => $animal->id,
@@ -203,6 +215,6 @@ class GanadoController extends Controller
         $animal = Animal::findOrFail($id);
         $animal->delete();
 
-        return redirect()->route('dashboard')->with('success', 'Ganado eliminado correctamente.');
+        return redirect()->route('admin.ganado.index')->with('success', 'Ganado eliminado correctamente.');
     }
 }

@@ -26,58 +26,59 @@
         <div class="min-h-screen flex flex-col">
             @include('layouts.navigation')
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white shadow-md border-b border-gray-200 animate-slide-down">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
-
-            <!-- Page Content -->
-            <main class="flex-grow">
-                <div class="animate-fade-in">
-                    {{ $slot }}
-                </div>
-            </main>
-
-            <!-- Footer -->
-            <footer class="footer-bovi">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <!-- Columna 1: Acerca de -->
-                        <div>
-                            <h3 class="text-lg font-bold mb-4 flex items-center">
-                                <svg class="w-6 h-6 mr-2 footer-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                                Acerca de BoviTrack
-                            </h3>
-                            <p class="text-gray-300 text-sm leading-relaxed">
-                                Sistema profesional de gestión ganadera para el control, seguimiento y administración de ganado bovino mediante tecnología NFC.
-                            </p>
+            <div class="flex-1 flex flex-col sm:ml-64">
+                <!-- Page Heading -->
+                @isset($header)
+                    <header class="bg-white shadow-md border-b border-gray-200 animate-slide-down">
+                        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                            {{ $header }}
                         </div>
+                    </header>
+                @endisset
 
-                        <!-- Columna 2: Enlaces Rápidos -->
-                        <div>
-                            <h3 class="text-lg font-bold mb-4 flex items-center">
-                                <svg class="w-6 h-6 mr-2 footer-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
-                                </svg>
-                                Enlaces Rápidos
-                            </h3>
-                            <ul class="space-y-2 text-sm">
-                                <li>
-                                    <a href="{{ route('dashboard') }}" class="footer-link flex items-center">
-                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                        </svg>
-                                        Panel Principal
-                                    </a>
-                                </li>
-                              
-                                <li>
+                <!-- Page Content -->
+                <main class="flex-grow">
+                    <div class="animate-fade-in">
+                        {{ $slot }}
+                    </div>
+                </main>
+
+                <!-- Footer -->
+                <footer class="footer-bovi">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <!-- Columna 1: Acerca de -->
+                            <div>
+                                <h3 class="text-lg font-bold mb-4 flex items-center">
+                                    <svg class="w-6 h-6 mr-2 footer-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    Acerca de BoviTrack
+                                </h3>
+                                <p class="text-gray-300 text-sm leading-relaxed">
+                                    Sistema profesional de gestión ganadera para el control, seguimiento y administración de ganado bovino mediante tecnología NFC.
+                                </p>
+                            </div>
+
+                            <!-- Columna 2: Enlaces Rápidos -->
+                            <div>
+                                <h3 class="text-lg font-bold mb-4 flex items-center">
+                                    <svg class="w-6 h-6 mr-2 footer-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+                                    </svg>
+                                    Enlaces Rápidos
+                                </h3>
+                                <ul class="space-y-2 text-sm">
+                                    <li>
+                                        <a href="{{ route('dashboard') }}" class="footer-link flex items-center">
+                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                            </svg>
+                                            Panel Principal
+                                        </a>
+                                    </li>
+                                  
+                                    <li>
                                     <a href="{{ route('profile.edit') }}" class="footer-link flex items-center">
                                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>

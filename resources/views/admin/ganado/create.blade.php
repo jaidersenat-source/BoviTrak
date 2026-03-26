@@ -74,7 +74,9 @@
         <form method="POST" action="{{ route('admin.ganado.store') }}" enctype="multipart/form-data" id="ganadoForm">
             @csrf
 
-            <!-- Sección: Información Básica -->
+            <!-- ═══════════════════════════════════════════════════ -->
+            <!-- Sección: Información Básica                        -->
+            <!-- ═══════════════════════════════════════════════════ -->
             <div class="bg-white rounded-xl shadow-lg border border-gray-100 mb-6 overflow-hidden transform transition-all duration-300 hover:shadow-xl">
                 <div class="card-header-green">
                     <h3 class="text-xl font-bold text-white flex items-center">
@@ -135,20 +137,48 @@
                         <p class="mt-1 text-xs text-gray-500">Opcional</p>
                     </div>
 
-                    <!-- Raza -->
+                    <!-- ══════════════════════════════════════════════ -->
+                    <!-- NUEVO: Raza como dropdown + campo "Otra raza" -->
+                    <!-- ══════════════════════════════════════════════ -->
                     <div>
                         <label for="raza" class="block text-sm font-semibold text-gray-700 mb-2">
-                            Raza <span class="text-red-600">*</span>
+                            Raza (Cruce Reproductivo) <span class="text-red-600">*</span>
                         </label>
-                        <input 
-                            type="text" 
-                            name="raza" 
-                            id="raza"
-                            value="{{ old('raza') }}"
-                            placeholder="Ej: Brahman, Angus, Nelore"
+                        <select 
+                            name="raza_select" 
+                            id="raza_select"
                             class="input-bovi w-full @error('raza') border-red-500 bg-red-50 @enderror"
+                            onchange="toggleOtraRaza(this.value)"
                             required
                         >
+                            <option value="">-- Seleccione una raza --</option>
+                            <option value="Gyrolando 3/4"   {{ old('raza') == 'Gyrolando 3/4'   ? 'selected' : '' }}>Gyrolando ¾</option>
+                            <option value="Gyrolando 5/8"   {{ old('raza') == 'Gyrolando 5/8'   ? 'selected' : '' }}>Gyrolando 5/8</option>
+                            <option value="F1"              {{ old('raza') == 'F1'              ? 'selected' : '' }}>F1</option>
+                            <option value="Brahman"         {{ old('raza') == 'Brahman'         ? 'selected' : '' }}>Brahman</option>
+                            <option value="Angus"           {{ old('raza') == 'Angus'           ? 'selected' : '' }}>Angus</option>
+                            <option value="Nelore"          {{ old('raza') == 'Nelore'          ? 'selected' : '' }}>Nelore</option>
+                            <option value="Simmental"       {{ old('raza') == 'Simmental'       ? 'selected' : '' }}>Simmental</option>
+                            <option value="Cebu"            {{ old('raza') == 'Cebu'            ? 'selected' : '' }}>Cebú</option>
+                            <option value="otra"            {{ (old('raza') && !in_array(old('raza'), ['Gyrolando 3/4','Gyrolando 5/8','F1','Brahman','Angus','Nelore','Simmental','Cebu'])) ? 'selected' : '' }}>Otra raza...</option>
+                        </select>
+
+                        <!-- Campo de texto que aparece solo cuando se selecciona "Otra raza" -->
+                        <div id="otra_raza_container" class="mt-3 {{ (old('raza') && !in_array(old('raza'), ['Gyrolando 3/4','Gyrolando 5/8','F1','Brahman','Angus','Nelore','Simmental','Cebu'])) ? '' : 'hidden' }}">
+                            <input 
+                                type="text" 
+                                name="raza" 
+                                id="raza"
+                                value="{{ old('raza') }}"
+                                placeholder="Escriba la raza del animal"
+                                class="input-bovi w-full @error('raza') border-red-500 bg-red-50 @enderror"
+                            >
+                            <p class="mt-1 text-xs text-gray-500">Ingrese el nombre de la raza</p>
+                        </div>
+
+                        <!-- Campo oculto que se completa cuando se elige del dropdown (no "otra") -->
+                        <input type="hidden" name="raza" id="raza_hidden" value="{{ old('raza') }}">
+
                         @error('raza')
                             <p class="mt-1 text-sm text-red-600 flex items-center">
                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -172,7 +202,7 @@
                             required
                         >
                             <option value="">-- Seleccione una opción --</option>
-                            <option value="macho" {{ old('sexo') == 'macho' ? 'selected' : '' }}>Macho</option>
+                            <option value="macho"  {{ old('sexo') == 'macho'  ? 'selected' : '' }}>Macho</option>
                             <option value="hembra" {{ old('sexo') == 'hembra' ? 'selected' : '' }}>Hembra</option>
                         </select>
                         @error('sexo')
@@ -186,10 +216,70 @@
                         <p class="mt-1 text-xs text-gray-500">Requerido</p>
                     </div>
 
+                    <!-- ══════════════════════════════════════════════ -->
+                    <!-- NUEVO: Propósito del animal                   -->
+                    <!-- ══════════════════════════════════════════════ -->
+                    <div>
+                        <label for="proposito" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Propósito <span class="text-red-600">*</span>
+                        </label>
+                        <select 
+                            name="proposito" 
+                            id="proposito"
+                            class="input-bovi w-full @error('proposito') border-red-500 bg-red-50 @enderror"
+                            required
+                        >
+                            <option value="">-- Seleccione el propósito --</option>
+                            <option value="carne"          {{ old('proposito') == 'carne'          ? 'selected' : '' }}>🥩 Carne</option>
+                            <option value="leche"          {{ old('proposito') == 'leche'          ? 'selected' : '' }}>🥛 Leche</option>
+                            <option value="doble_proposito" {{ old('proposito') == 'doble_proposito' ? 'selected' : '' }}>⚡ Doble Propósito</option>
+                        </select>
+                        @error('proposito')
+                            <p class="mt-1 text-sm text-red-600 flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                {{ $message }}
+                            </p>
+                        @enderror
+                        <p class="mt-1 text-xs text-gray-500">Requerido</p>
+                    </div>
+
+                    <!-- ══════════════════════════════════════════════ -->
+                    <!-- NUEVO: Estado del animal                      -->
+                    <!-- ══════════════════════════════════════════════ -->
+                    <div>
+                        <label for="estado" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Estado del Animal <span class="text-red-600">*</span>
+                        </label>
+                        <select 
+                            name="estado" 
+                            id="estado"
+                            class="input-bovi w-full @error('estado') border-red-500 bg-red-50 @enderror"
+                            required
+                        >
+                            <option value="">-- Seleccione el estado --</option>
+                            <option value="activo"  {{ old('estado', 'activo') == 'activo'  ? 'selected' : '' }}>✅ Activo</option>
+                            <option value="vendido" {{ old('estado') == 'vendido' ? 'selected' : '' }}>💰 Vendido</option>
+                            <option value="muerto"  {{ old('estado') == 'muerto'  ? 'selected' : '' }}>❌ Muerto</option>
+                        </select>
+                        @error('estado')
+                            <p class="mt-1 text-sm text-red-600 flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                {{ $message }}
+                            </p>
+                        @enderror
+                        <p class="mt-1 text-xs text-gray-500">Requerido. Por defecto: Activo</p>
+                    </div>
+
                 </div>
             </div>
 
-            <!-- Sección: Datos Físicos -->
+            <!-- ═══════════════════════════════════════════════════ -->
+            <!-- Sección: Datos Físicos                             -->
+            <!-- ═══════════════════════════════════════════════════ -->
             <div class="bg-white rounded-xl shadow-lg border border-gray-100 mb-6 overflow-hidden transform transition-all duration-300 hover:shadow-xl">
                 <div class="card-header-green">
                     <h3 class="text-xl font-bold text-white flex items-center">
@@ -201,27 +291,55 @@
                 </div>
                 <div class="p-6 space-y-5">
 
-                    <!-- Fecha de Nacimiento -->
-                    <div>
-                        <label for="fecha_nacimiento" class="block text-sm font-semibold text-gray-700 mb-2">
-                            Fecha de Nacimiento
-                        </label>
-                        <input 
-                            type="date" 
-                            name="fecha_nacimiento" 
-                            id="fecha_nacimiento"
-                            value="{{ old('fecha_nacimiento') }}"
-                            class="input-bovi w-full @error('fecha_nacimiento') border-red-500 bg-red-50 @enderror"
-                        >
-                        @error('fecha_nacimiento')
-                            <p class="mt-1 text-sm text-red-600 flex items-center">
-                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                                {{ $message }}
-                            </p>
-                        @enderror
-                        <p class="mt-1 text-xs text-gray-500">Opcional</p>
+                    <!-- ══════════════════════════════════════════════════════════════════ -->
+                    <!-- MODIFICADO: Dos campos de fecha separados en lugar de uno solo   -->
+                    <!-- ══════════════════════════════════════════════════════════════════ -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <!-- Fecha de Nacimiento -->
+                        <div>
+                            <label for="fecha_nacimiento" class="block text-sm font-semibold text-gray-700 mb-2">
+                                Fecha de Nacimiento
+                            </label>
+                            <input 
+                                type="date" 
+                                name="fecha_nacimiento" 
+                                id="fecha_nacimiento"
+                                value="{{ old('fecha_nacimiento') }}"
+                                class="input-bovi w-full @error('fecha_nacimiento') border-red-500 bg-red-50 @enderror"
+                            >
+                            @error('fecha_nacimiento')
+                                <p class="mt-1 text-sm text-red-600 flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            @enderror
+                            <p class="mt-1 text-xs text-gray-500">Opcional</p>
+                        </div>
+
+                        <!-- NUEVO: Fecha de Ingreso al Hato -->
+                        <div>
+                            <label for="fecha_ingreso_hato" class="block text-sm font-semibold text-gray-700 mb-2">
+                                Fecha de Ingreso al Hato
+                            </label>
+                            <input 
+                                type="date" 
+                                name="fecha_ingreso_hato" 
+                                id="fecha_ingreso_hato"
+                                value="{{ old('fecha_ingreso_hato', date('Y-m-d')) }}"
+                                class="input-bovi w-full @error('fecha_ingreso_hato') border-red-500 bg-red-50 @enderror"
+                            >
+                            @error('fecha_ingreso_hato')
+                                <p class="mt-1 text-sm text-red-600 flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            @enderror
+                            <p class="mt-1 text-xs text-gray-500">Opcional. Por defecto: hoy</p>
+                        </div>
                     </div>
 
                     <!-- Peso Aproximado -->
@@ -277,7 +395,9 @@
                 </div>
             </div>
 
-            <!-- Sección: Información Adicional -->
+            <!-- ═══════════════════════════════════════════════════ -->
+            <!-- Sección: Información Adicional                     -->
+            <!-- ═══════════════════════════════════════════════════ -->
             <div class="bg-white rounded-xl shadow-lg border border-gray-100 mb-6 overflow-hidden transform transition-all duration-300 hover:shadow-xl">
                 <div class="card-header-brown">
                     <h3 class="text-xl font-bold text-white flex items-center">
@@ -288,8 +408,6 @@
                     </h3>
                 </div>
                 <div class="p-6">
-
-                    <!-- Observaciones -->
                     <div>
                         <label for="observaciones" class="block text-sm font-semibold text-gray-700 mb-2">
                             Observaciones
@@ -311,11 +429,12 @@
                         @enderror
                         <p class="mt-1 text-xs text-gray-500">Opcional</p>
                     </div>
-
                 </div>
             </div>
 
-            <!-- Sección: Imágenes -->
+            <!-- ═══════════════════════════════════════════════════ -->
+            <!-- Sección: Imágenes                                  -->
+            <!-- ═══════════════════════════════════════════════════ -->
             <div class="bg-white rounded-xl shadow-lg border border-gray-100 mb-6 overflow-hidden transform transition-all duration-300 hover:shadow-xl">
                 <div class="card-header-amber">
                     <h3 class="text-xl font-bold text-white flex items-center">
@@ -372,7 +491,7 @@
                                 {{ $message }}
                             </p>
                         @enderror
-                        <p class="mt-1 text-xs text-gray-500">Opcional. Máximo 10MB por foto. Foto del animal completo.</p>
+                        <p class="mt-1 text-xs text-gray-500">Opcional. Máximo 10MB. Foto del animal completo.</p>
                     </div>
 
                     <!-- Fotos Adicionales -->
@@ -419,7 +538,7 @@
                         Guardando...
                     </span>
                 </button>
-                <a href="{{ route('dashboard') }}" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-4 px-6 rounded-lg transition-all duration-200 flex items-center justify-center gap-2">
+                <a href="{{ route('ganado.index') }}" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-4 px-6 rounded-lg transition-all duration-200 flex items-center justify-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
@@ -438,11 +557,9 @@
             </div>
 
         </form>
-
     </div>
 
     <style>
-        /* Estilo personalizado para botones de carga de archivos */
         input[type="file"]::file-selector-button {
             background: linear-gradient(to right, #d97706, #b45309);
             color: white;
@@ -454,44 +571,70 @@
     </style>
 
     <script>
-        // Mostrar spinner al enviar el formulario
+        // ──────────────────────────────────────────────
+        // Lógica del dropdown de Raza + "Otra raza"
+        // ──────────────────────────────────────────────
+        function toggleOtraRaza(value) {
+            const otraContainer = document.getElementById('otra_raza_container');
+            const razaInput     = document.getElementById('raza');
+            const razaHidden    = document.getElementById('raza_hidden');
+
+            if (value === 'otra') {
+                // Mostrar campo de texto libre, limpiar hidden
+                otraContainer.classList.remove('hidden');
+                razaInput.required = true;
+                razaHidden.name    = '';      // Desactivar el hidden para que no envíe valor vacío
+                razaInput.name     = 'raza';  // Activar el campo de texto como el que envía "raza"
+                razaInput.focus();
+            } else {
+                // Ocultar campo de texto, enviar valor del dropdown por hidden
+                otraContainer.classList.add('hidden');
+                razaInput.required = false;
+                razaInput.name     = '';      // Desactivar el campo de texto
+                razaHidden.name    = 'raza';  // Activar el hidden
+                razaHidden.value   = value;
+            }
+        }
+
+        // Inicializar al cargar (por si hay old() con "otra raza")
+        document.addEventListener('DOMContentLoaded', function () {
+            const select = document.getElementById('raza_select');
+            if (select.value) {
+                toggleOtraRaza(select.value);
+            }
+        });
+
+        // ──────────────────────────────────────────────
+        // Spinner al enviar
+        // ──────────────────────────────────────────────
         document.getElementById('ganadoForm').addEventListener('submit', function(e) {
-            const submitBtn = document.getElementById('submitBtn');
-            const submitText = document.getElementById('submitText');
+            const submitBtn    = document.getElementById('submitBtn');
+            const submitText   = document.getElementById('submitText');
             const submitSpinner = document.getElementById('submitSpinner');
-            
-            // Deshabilitar botón y mostrar spinner
+
             submitBtn.disabled = true;
             submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
             submitText.classList.add('hidden');
             submitSpinner.classList.remove('hidden');
         });
 
-        // Previsualización de imágenes
+        // ──────────────────────────────────────────────
+        // Validación de tamaño de archivos (10MB)
+        // ──────────────────────────────────────────────
         document.querySelectorAll('input[type="file"]').forEach(input => {
             input.addEventListener('change', function(e) {
-                const files = e.target.files;
-                if (files.length > 0) {
-                    const fileNames = Array.from(files).map(f => f.name).join(', ');
-                    console.log('Archivos seleccionados:', fileNames);
-                    
-                    // Validar tamaño de archivos (10MB máximo)
-                    Array.from(files).forEach(file => {
-                        if (file.size > 10 * 1024 * 1024) {
-                            alert(`El archivo ${file.name} excede el tamaño máximo de 10MB`);
-                            e.target.value = '';
-                        }
-                    });
-                }
+                Array.from(e.target.files).forEach(file => {
+                    if (file.size > 10 * 1024 * 1024) {
+                        alert(`El archivo "${file.name}" excede el tamaño máximo de 10MB.`);
+                        e.target.value = '';
+                    }
+                });
             });
         });
 
+        // ──────────────────────────────────────────────
         // Animación de entrada para las secciones
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
+        // ──────────────────────────────────────────────
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -505,7 +648,7 @@
                     observer.unobserve(entry.target);
                 }
             });
-        }, observerOptions);
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
         document.querySelectorAll('.bg-white.rounded-xl').forEach(section => {
             observer.observe(section);

@@ -161,7 +161,7 @@
                         <p class="mt-1 text-xs text-gray-500">Requerido</p>
                     </div>
 
-                    <!-- Sexo -->
+                        <!-- Sexo -->
                     <div>
                         <label for="sexo" class="block text-sm font-semibold text-gray-700 mb-2">
                             Sexo <span class="text-red-600">*</span>
@@ -177,6 +177,61 @@
                             <option value="hembra" {{ old('sexo', $animal->sexo) == 'hembra' ? 'selected' : '' }}>Hembra</option>
                         </select>
                         @error('sexo')
+                            <p class="mt-1 text-sm text-red-600 flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                {{ $message }}
+                            </p>
+                        @enderror
+                        <p class="mt-1 text-xs text-gray-500">Requerido</p>
+                    </div>
+
+                    <!-- Propósito -->
+                     <div>
+                        <label for="proposito" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Propósito <span class="text-red-600">*</span>
+                        </label>
+                        <select 
+                            name="proposito" 
+                            id="proposito"
+                            class="input-bovi w-full @error('proposito') border-red-500 bg-red-50 @enderror"
+                            required
+                        >
+                            <option value="">-- Seleccione una opción --</option>
+                            <option value="carne" {{ old('proposito', $animal->proposito) == 'carne' ? 'selected' : '' }}>Carne</option>
+                            <option value="leche" {{ old('proposito', $animal->proposito) == 'leche' ? 'selected' : '' }}>Leche</option>
+                            <option value="doble_proposito" {{ old('proposito', $animal->proposito) == 'doble_proposito' ? 'selected' : '' }}>Doble Propósito</option>
+                        </select>
+                        @error('proposito')
+                            <p class="mt-1 text-sm text-red-600 flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                {{ $message }}
+                            </p>
+                        @enderror
+                        <p class="mt-1 text-xs text-gray-500">Requerido</p>
+                    </div>
+
+
+                     <!-- Estado -->
+                     <div>
+                        <label for="estado" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Estado <span class="text-red-600">*</span>
+                        </label>
+                        <select 
+                            name="estado" 
+                            id="estado"
+                            class="input-bovi w-full @error('estado') border-red-500 bg-red-50 @enderror"
+                            required
+                        >
+                            <option value="">-- Seleccione una opción --</option>
+                            <option value="activo" {{ old('estado', $animal->estado) == 'activo' ? 'selected' : '' }}>Activo</option>
+                            <option value="vendido" {{ old('estado', $animal->estado) == 'vendido' ? 'selected' : '' }}>Vendido</option>
+                            <option value="muerto" {{ old('estado', $animal->estado) == 'muerto' ? 'selected' : '' }}>Muerto</option>
+                        </select>
+                        @error('estado')
                             <p class="mt-1 text-sm text-red-600 flex items-center">
                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -215,6 +270,28 @@
                             class="input-bovi w-full @error('fecha_nacimiento') border-red-500 bg-red-50 @enderror"
                         >
                         @error('fecha_nacimiento')
+                            <p class="mt-1 text-sm text-red-600 flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                {{ $message }}
+                            </p>
+                        @enderror
+                        <p class="mt-1 text-xs text-gray-500">Opcional</p>
+                    </div>
+
+                     <div>
+                        <label for="fecha_ingreso_hato" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Fecha de Ingreso al Hato
+                        </label>
+                        <input 
+                            type="date" 
+                            name="fecha_ingreso_hato" 
+                            id="fecha_ingreso_hato"
+                            value="{{ old('fecha_ingreso_hato', $animal->fecha_ingreso_hato) }}"
+                            class="input-bovi w-full @error('fecha_ingreso_hato') border-red-500 bg-red-50 @enderror"
+                        >
+                        @error('fecha_ingreso_hato')
                             <p class="mt-1 text-sm text-red-600 flex items-center">
                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
