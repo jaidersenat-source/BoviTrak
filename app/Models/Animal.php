@@ -9,6 +9,7 @@ use App\Models\AnimalVaccination;
 use App\Models\AnimalHealthRecord;
 use App\Models\AnimalReproductiveRecord;
 use App\Models\AnimalDescendance;
+use App\Models\MilkProduction;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -71,6 +72,11 @@ public function healthRecords()
 public function reproductiveRecords()
 {
     return $this->hasMany(AnimalReproductiveRecord::class);
+}
+
+public function milkProductions(): HasMany
+{
+    return $this->hasMany(MilkProduction::class)->orderByDesc('date');
 }
  
 // 3. Accessor opcional: obtener el último proceso activo

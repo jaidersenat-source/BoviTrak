@@ -35,12 +35,15 @@
                     Ganado
                 </a>
 
-                <a href="{{ route('admin.ganado.create') }}" class="flex items-center px-4 py-3 rounded-lg {{ request()->routeIs('admin.ganado.create') ? 'bg-gradient-to-r from-green-600 to-green-700 text-white shadow-md' : 'text-gray-700 hover:bg-green-50 hover:text-green-600' }} transition-all duration-200">
-                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                
+                <a href="{{ route('admin.lotes.index') }}" class="flex items-center px-4 py-3 rounded-lg {{ request()->routeIs('admin.lotes.index') ? 'bg-bovi-brown-100 text-bovi-brown-800 font-bold' : 'text-gray-700 hover:bg-bovi-brown-50 hover:text-bovi-brown-700' }} transition-all duration-200">
+                    <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M3 3h8v8H3V3zM13 3h8v8h-8V3zM3 13h8v8H3v-8zM13 13h8v8h-8v-8z" fill="currentColor" />
                     </svg>
-                    Registrar Ganado
+                    Lotes
                 </a>
+
+               
 
                 <div class="flex items-center px-4 py-2 mt-4 bg-bovi-green-50 rounded-lg">
                     <svg class="w-5 h-5 mr-2 text-bovi-green-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">

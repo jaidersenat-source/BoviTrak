@@ -9,6 +9,8 @@ use App\Http\Controllers\AnimalVaccinationController;
 use App\Http\Controllers\AnimalHealthRecordController;
 use App\Http\Controllers\AnimalReproductiveRecordController;
 use App\Http\Controllers\AnimalDescendanceController;
+use App\Http\Controllers\LotesController;
+use App\Http\Controllers\MilkProductionController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -65,6 +67,17 @@ Route::middleware('auth')->group(function () {
     Route::put('/descendencia/{record}',               [AnimalDescendanceController::class, 'update'])->name('descendencia.update');
     Route::delete('/descendencia/{record}',            [AnimalDescendanceController::class, 'destroy'])->name('descendencia.destroy');
  
+    // ── NUEVO: Producción de Leche ──────────────────────────────
+    Route::get('/leche',                        [MilkProductionController::class, 'index'])->name('milk.index');
+    Route::get('/leche/create',                 [MilkProductionController::class, 'create'])->name('milk.create');
+    Route::post('/leche',                       [MilkProductionController::class, 'store'])->name('milk.store');
+    Route::get('/leche/{milk}',                 [MilkProductionController::class, 'show'])->name('milk.show');
+    Route::get('/leche/{milk}/edit',            [MilkProductionController::class, 'edit'])->name('milk.edit');
+    Route::put('/leche/{milk}',                 [MilkProductionController::class, 'update'])->name('milk.update');
+    Route::delete('/leche/{milk}',              [MilkProductionController::class, 'destroy'])->name('milk.destroy');
+
+    // Registro de Lotes: ahora manejado como módulo independiente (rutas en /admin/lotes)
+
 
  
 }); // ← cierra animals
@@ -79,6 +92,17 @@ Route::middleware('auth')->group(function () {
             Route::put('{ganado}', [GanadoController::class, 'update'])->name('update');
             Route::delete('{ganado}', [GanadoController::class, 'destroy'])->name('destroy');
         }); // ← cierra ganado
+
+        // Rutas de Lotes como módulo independiente bajo /admin/lotes
+        Route::prefix('lotes')->name('lotes.')->group(function () {
+            Route::get('/', [LotesController::class, 'index'])->name('index');
+            Route::get('create', [LotesController::class, 'create'])->name('create');
+            Route::post('/', [LotesController::class, 'store'])->name('store');
+            Route::get('{lote}', [LotesController::class, 'show'])->name('show');
+            Route::get('{lote}/edit', [LotesController::class, 'edit'])->name('edit');
+            Route::put('{lote}', [LotesController::class, 'update'])->name('update');
+            Route::delete('{lote}', [LotesController::class, 'destroy'])->name('destroy');
+        });
     }); // ← cierra admin
 
 });
