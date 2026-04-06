@@ -225,6 +225,30 @@
                 <p class="mt-1 text-xs text-gray-500">Opcional.</p>
             </div>
 
+            {{-- Fecha de inserción (monta / inseminación / embrión) --}}
+            <div>
+                <label for="fecha_insercion" class="block text-sm font-semibold text-gray-700 mb-2">
+                    Fecha de Inserción / Monta
+                </label>
+                <input
+                    type="date"
+                    name="fecha_insercion"
+                    id="fecha_insercion"
+                    value="{{ old('fecha_insercion', isset($record->fecha_insercion) ? $record->fecha_insercion->format('Y-m-d') : '') }}"
+                    max="{{ date('Y-m-d') }}"
+                    class="input-bovi w-full @error('fecha_insercion') border-red-500 bg-red-50 @enderror"
+                >
+                @error('fecha_insercion')
+                    <p class="mt-1 text-sm text-red-600 flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        {{ $message }}
+                    </p>
+                @enderror
+                <p class="mt-1 text-xs text-gray-500">Registra la fecha de inserción del semen/embrión o la monta.</p>
+            </div>
+
             {{-- Fecha de preñez --}}
             <div>
                 <label for="fecha_prenez" class="block text-sm font-semibold text-gray-700 mb-2">
@@ -332,6 +356,55 @@
         <p class="mt-1 text-xs text-gray-500">Opcional. Máximo 1000 caracteres.</p>
     </div>
 
+    {{-- ── Re-palpación y confirmación del proceso ───────────── --}}
+    <div class="mb-6">
+        <div class="flex items-center gap-2 mb-4">
+            <div class="flex items-center justify-center w-7 h-7 rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold shrink-0">5</div>
+            <h4 class="text-base font-bold text-indigo-700 flex items-center gap-2">Re-palpación y Confirmación</h4>
+        </div>
+
+        <div class="bg-indigo-50 rounded-xl p-5 space-y-4 border border-indigo-100">
+            <div class="flex items-center gap-4">
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input
+                        type="checkbox"
+                        name="repalpacion"
+                        id="repalpacion"
+                        value="1"
+                        class="sr-only peer"
+                        {{ old('repalpacion', $record->repalpacion ?? false) ? 'checked' : '' }}
+                        onchange="toggleRepalpacion(this.checked)"
+                    >
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                    <span class="ml-3 text-sm font-semibold text-gray-700">Re-palpación realizada</span>
+                </label>
+            </div>
+
+            <div id="repalpacion_fields" class="{{ old('repalpacion', $record->repalpacion ?? false) ? '' : 'hidden' }} space-y-3">
+                <div>
+                    <label for="fecha_repalpacion" class="block text-sm font-semibold text-gray-700 mb-2">Fecha de Re-palpación</label>
+                    <input type="date" name="fecha_repalpacion" id="fecha_repalpacion" max="{{ date('Y-m-d') }}" class="input-bovi w-full" value="{{ old('fecha_repalpacion', isset($record->fecha_repalpacion) ? $record->fecha_repalpacion->format('Y-m-d') : '') }}">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Resultado</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <label class="inline-flex items-center gap-2">
+                            <input type="radio" name="repalpacion_efectiva" value="1" {{ old('repalpacion_efectiva', $record->repalpacion_efectiva ?? null) ? 'checked' : '' }}>
+                            <span class="text-sm">Efectivo (Confirmado)</span>
+                        </label>
+                        <label class="inline-flex items-center gap-2">
+                            <input type="radio" name="repalpacion_efectiva" value="0" {{ old('repalpacion_efectiva', $record->repalpacion_efectiva ?? null) === 0 ? 'checked' : '' }}>
+                            <span class="text-sm">No efectivo</span>
+                        </label>
+                    </div>
+                </div>
+
+                <p class="text-xs text-gray-500">Si la re-palpación confirma embarazo, la fecha estimada de parto se calculará automáticamente si no fue ingresada.</p>
+            </div>
+        </div>
+    </div>
+
     {{-- ── Botones ─────────────────────────────────────────────── --}}
     <div class="flex flex-col sm:flex-row gap-4">
         <button
@@ -420,4 +493,18 @@
         btn.disabled = true;
         btn.classList.add('opacity-75', 'cursor-not-allowed');
     });
+
+    // Toggle re-palpación
+    function toggleRepalpacion(checked) {
+        const wrap = document.getElementById('repalpacion_fields');
+        const fecha = document.getElementById('fecha_repalpacion');
+        if (checked) {
+            wrap.classList.remove('hidden');
+        } else {
+            wrap.classList.add('hidden');
+            if (fecha) fecha.value = '';
+            const radios = document.getElementsByName('repalpacion_efectiva');
+            radios.forEach(r => r.checked = false);
+        }
+    }
 </script>

@@ -335,6 +335,382 @@
                     </div>
                 </div>
 
+                <!-- ─── Vacunaciones ────────────────────────────────────── -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
+                        <h2 class="text-lg font-bold flex items-center text-bovi-dark">
+                            <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                            </svg>
+                            Vacunaciones
+                            <span class="ml-2 bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">
+                                {{ $animal->vaccinations->count() }}
+                            </span>
+                        </h2>
+                    </div>
+                    <div class="p-6">
+                        @if($animal->vaccinations->isNotEmpty())
+                            @php $lastVac = $animal->vaccinations->first(); @endphp
+                            <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg flex items-start gap-3">
+                                <svg class="w-5 h-5 text-blue-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <div>
+                                    <p class="text-sm font-semibold text-blue-800">Última vacuna: {{ $lastVac->vacuna }}</p>
+                                    <p class="text-xs text-blue-600">{{ $lastVac->fecha_vacunacion->format('d/m/Y') }} &mdash; Dosis: {{ $lastVac->dosis }}</p>
+                                </div>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full text-sm divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Vacuna</th>
+                                            <th class="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Dosis</th>
+                                            <th class="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Fecha</th>
+                                            <th class="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Lote</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-100">
+                                        @foreach($animal->vaccinations->take(5) as $vac)
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-3 py-2 font-medium text-gray-800">{{ $vac->vacuna }}</td>
+                                            <td class="px-3 py-2 text-gray-600">{{ $vac->dosis }}</td>
+                                            <td class="px-3 py-2 text-gray-600">{{ $vac->fecha_vacunacion->format('d/m/Y') }}</td>
+                                            <td class="px-3 py-2 text-gray-500">{{ $vac->lote ?? '—' }}</td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                            @if($animal->vaccinations->count() > 5)
+                            <p class="text-xs text-gray-400 mt-2 text-right">Mostrando 5 de {{ $animal->vaccinations->count() }} registros</p>
+                            @endif
+                        @else
+                            <div class="text-center py-8">
+                                <svg class="w-12 h-12 mx-auto text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                                </svg>
+                                <p class="text-gray-400 font-medium">Sin registros de vacunación</p>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- ─── Registro Sanitario ──────────────────────────────── -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
+                        <h2 class="text-lg font-bold flex items-center text-bovi-dark">
+                            <svg class="w-5 h-5 mr-2 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                            Registro Sanitario
+                            <span class="ml-2 bg-emerald-100 text-emerald-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">
+                                {{ $animal->healthRecords->count() }}
+                            </span>
+                        </h2>
+                    </div>
+                    <div class="p-6">
+                        @if($animal->healthRecords->isNotEmpty())
+                            @php $lastHealth = $animal->healthRecords->first(); @endphp
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                                @if($lastHealth->fecha_lavado)
+                                <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
+                                    <p class="text-xs font-semibold text-emerald-700 uppercase mb-1">Último Lavado Antiparasitario</p>
+                                    <p class="text-sm font-bold text-gray-800">{{ \Carbon\Carbon::parse($lastHealth->fecha_lavado)->format('d/m/Y') }}</p>
+                                    @if($lastHealth->producto_lavado)
+                                    <p class="text-xs text-gray-600 mt-1">{{ $lastHealth->producto_lavado }}</p>
+                                    @endif
+                                </div>
+                                @endif
+                                @if($lastHealth->fecha_purga)
+                                <div class="p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                                    <p class="text-xs font-semibold text-amber-700 uppercase mb-1">Última Purga</p>
+                                    <p class="text-sm font-bold text-gray-800">{{ \Carbon\Carbon::parse($lastHealth->fecha_purga)->format('d/m/Y') }}</p>
+                                    @if($lastHealth->tipo_purgante)
+                                    <p class="text-xs text-gray-600 mt-1">{{ $lastHealth->tipo_purgante }}</p>
+                                    @endif
+                                </div>
+                                @endif
+                            </div>
+                            @if($lastHealth->observaciones)
+                            <div class="p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700">
+                                <span class="font-semibold text-gray-500 text-xs uppercase">Observaciones: </span>{{ $lastHealth->observaciones }}
+                            </div>
+                            @endif
+                            @if($animal->healthRecords->count() > 1)
+                            <p class="text-xs text-gray-400 mt-2 text-right">{{ $animal->healthRecords->count() }} registros sanitarios en total</p>
+                            @endif
+                        @else
+                            <div class="text-center py-8">
+                                <svg class="w-12 h-12 mx-auto text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                </svg>
+                                <p class="text-gray-400 font-medium">Sin registros sanitarios</p>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- ─── Historial de Pesos ──────────────────────────────── -->
+                @if($animal->weights->isNotEmpty())
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
+                        <h2 class="text-lg font-bold flex items-center text-bovi-dark">
+                            <svg class="w-5 h-5 mr-2 text-bovi-brown-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path>
+                            </svg>
+                            Historial de Pesos
+                        </h2>
+                    </div>
+                    <div class="p-6">
+                        @php
+                            $weights = $animal->weights;
+                            $lastWeight = $weights->first();
+                            $firstWeight = $weights->last();
+                            $diffPeso = ($firstWeight && $weights->count() >= 2)
+                                ? round($lastWeight->peso - $firstWeight->peso, 1)
+                                : null;
+                        @endphp
+                        @if(!is_null($diffPeso))
+                        <div class="mb-4 flex items-center gap-2 p-3 rounded-lg {{ $diffPeso >= 0 ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200' }}">
+                            <svg class="w-5 h-5 {{ $diffPeso >= 0 ? 'text-green-600' : 'text-red-600' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $diffPeso >= 0 ? 'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6' : 'M13 17h8m0 0V9m0 8l-8-8-4 4-6-6' }}"></path>
+                            </svg>
+                            <p class="text-sm font-semibold {{ $diffPeso >= 0 ? 'text-green-800' : 'text-red-800' }}">
+                                Variación: {{ $diffPeso >= 0 ? '+' : '' }}{{ $diffPeso }} kg (último vs. primero registrado)
+                            </p>
+                        </div>
+                        @endif
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full text-sm divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Fecha</th>
+                                        <th class="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Peso (kg)</th>
+                                        <th class="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Nota</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100">
+                                    @foreach($weights as $w)
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-3 py-2 text-gray-600">{{ \Carbon\Carbon::parse($w->measured_at)->format('d/m/Y') }}</td>
+                                        <td class="px-3 py-2 font-bold text-gray-800">{{ number_format($w->peso, 1) }}</td>
+                                        <td class="px-3 py-2 text-gray-500 text-xs">{{ $w->nota ?? '—' }}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                @endif
+
+                <!-- ─── Registros Reproductivos ─────────────────────────── -->
+                @if($animal->reproductiveRecords->isNotEmpty())
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
+                        <h2 class="text-lg font-bold flex items-center text-bovi-dark">
+                            <svg class="w-5 h-5 mr-2 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                            Registros Reproductivos
+                            <span class="ml-2 bg-pink-100 text-pink-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">
+                                {{ $animal->reproductiveRecords->count() }}
+                            </span>
+                        </h2>
+                    </div>
+                    <div class="p-6">
+                        @php $lastRepro = $animal->reproductiveRecords->first(); @endphp
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                            @if($lastRepro->tipo_proceso)
+                            <div class="p-3 bg-pink-50 border border-pink-200 rounded-lg">
+                                <p class="text-xs font-semibold text-pink-700 uppercase mb-1">Tipo de Proceso</p>
+                                <p class="text-sm font-bold text-gray-800">{{ ucfirst(str_replace('_', ' ', $lastRepro->tipo_proceso)) }}</p>
+                                @if($lastRepro->fecha_prenez)
+                                <p class="text-xs text-gray-600 mt-1">Preñez: {{ \Carbon\Carbon::parse($lastRepro->fecha_prenez)->format('d/m/Y') }}</p>
+                                @endif
+                            </div>
+                            @endif
+                            @if($lastRepro->fecha_estimada_parto)
+                            @php
+                                $parto = \Carbon\Carbon::parse($lastRepro->fecha_estimada_parto);
+                                $diasParto = (int) now()->diffInDays($parto, false);
+                            @endphp
+                            <div class="p-3 {{ $diasParto > 0 ? 'bg-blue-50 border-blue-200' : 'bg-gray-50 border-gray-200' }} border rounded-lg">
+                                <p class="text-xs font-semibold {{ $diasParto > 0 ? 'text-blue-700' : 'text-gray-500' }} uppercase mb-1">
+                                    {{ $diasParto > 0 ? 'Parto Estimado' : 'Parto (pasado)' }}
+                                </p>
+                                <p class="text-sm font-bold text-gray-800">{{ $parto->format('d/m/Y') }}</p>
+                                <p class="text-xs mt-1 {{ $diasParto > 0 ? 'text-blue-600' : 'text-gray-400' }}">
+                                    {{ $diasParto > 0 ? "En $diasParto días" : abs($diasParto).' días atrás' }}
+                                </p>
+                            </div>
+                            @endif
+                        </div>
+                        @if($lastRepro->palpacion && $lastRepro->fecha_palpacion)
+                        <div class="text-sm text-gray-600 flex items-center gap-2">
+                            <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Palpación realizada: {{ \Carbon\Carbon::parse($lastRepro->fecha_palpacion)->format('d/m/Y') }}
+                        </div>
+                        @endif
+                        @if($lastRepro->observaciones)
+                        <div class="mt-3 p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700">
+                            <span class="font-semibold text-gray-500 text-xs uppercase">Observaciones: </span>{{ $lastRepro->observaciones }}
+                        </div>
+                        @endif
+                    </div>
+                </div>
+                @endif
+
+                <!-- ─── Producción de Leche ─────────────────────────────── -->
+                @if(in_array($animal->proposito, ['leche', 'doble_proposito']) || $animal->milkProductions->isNotEmpty())
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
+                        <h2 class="text-lg font-bold flex items-center text-bovi-dark">
+                            <svg class="w-5 h-5 mr-2 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                            </svg>
+                            Producción de Leche
+                        </h2>
+                    </div>
+                    <div class="p-6">
+                        @if($animal->milkProductions->isNotEmpty())
+                            @php
+                                $milks    = $animal->milkProductions;
+                                $lastMilk = $milks->first();
+                                $avgLitros= round($milks->avg('liters'), 1);
+                                $totalLitros = round($milks->sum('liters'), 1);
+                            @endphp
+                            <div class="grid grid-cols-3 gap-3 mb-4">
+                                <div class="text-center p-3 bg-sky-50 border border-sky-200 rounded-lg">
+                                    <p class="text-2xl font-bold text-sky-700">{{ number_format($lastMilk->liters, 1) }}</p>
+                                    <p class="text-xs text-gray-500 mt-1">Último registro<br>{{ \Carbon\Carbon::parse($lastMilk->date)->format('d/m/Y') }}</p>
+                                </div>
+                                <div class="text-center p-3 bg-sky-50 border border-sky-200 rounded-lg">
+                                    <p class="text-2xl font-bold text-sky-700">{{ $avgLitros }}</p>
+                                    <p class="text-xs text-gray-500 mt-1">Promedio L<br>({{ $milks->count() }} reg.)</p>
+                                </div>
+                                <div class="text-center p-3 bg-sky-50 border border-sky-200 rounded-lg">
+                                    <p class="text-2xl font-bold text-sky-700">{{ $totalLitros }}</p>
+                                    <p class="text-xs text-gray-500 mt-1">Total litros<br>registrados</p>
+                                </div>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full text-sm divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Fecha</th>
+                                            <th class="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Litros</th>
+                                            <th class="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Turno</th>
+                                            <th class="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Mastitis</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-100">
+                                        @foreach($milks->take(5) as $milk)
+                                        <tr class="hover:bg-gray-50 {{ $milk->mastitis ? 'bg-red-50' : '' }}">
+                                            <td class="px-3 py-2 text-gray-600">{{ \Carbon\Carbon::parse($milk->date)->format('d/m/Y') }}</td>
+                                            <td class="px-3 py-2 font-bold text-gray-800">{{ number_format($milk->liters, 1) }} L</td>
+                                            <td class="px-3 py-2 text-gray-500">{{ $milk->shift ?? '—' }}</td>
+                                            <td class="px-3 py-2">
+                                                @if($milk->mastitis)
+                                                <span class="text-xs font-semibold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Sí</span>
+                                                @else
+                                                <span class="text-xs text-gray-400">No</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                            @if($milks->count() > 5)
+                            <p class="text-xs text-gray-400 mt-2 text-right">Mostrando 5 de {{ $milks->count() }} registros</p>
+                            @endif
+                        @else
+                            <div class="text-center py-8">
+                                <svg class="w-12 h-12 mx-auto text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                </svg>
+                                <p class="text-gray-400 font-medium">Sin registros de producción de leche</p>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+                @endif
+
+                <!-- ─── Descendencia ──────────────────────────────────────── -->
+                @php
+                    $crias = $animal->sexo === 'macho' ? $animal->asPadre : $animal->asMadre;
+                @endphp
+                @if($crias->isNotEmpty() || ($animal->parentage && ($animal->parentage->padre || $animal->parentage->madre)))
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
+                        <h2 class="text-lg font-bold flex items-center text-bovi-dark">
+                            <svg class="w-5 h-5 mr-2 text-bovi-brown-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                            Descendencia
+                        </h2>
+                    </div>
+                    <div class="p-6 space-y-4">
+                        <!-- Padres del animal -->
+                        @if($animal->parentage && ($animal->parentage->padre || $animal->parentage->madre))
+                        <div>
+                            <p class="text-xs font-semibold text-gray-500 uppercase mb-2">Padres de este animal</p>
+                            <div class="grid grid-cols-2 gap-3">
+                                @if($animal->parentage->padre)
+                                <div class="p-3 bg-bovi-green-50 border border-bovi-green-200 rounded-lg text-center">
+                                    <p class="text-xs text-gray-500 mb-1">Padre (Toro)</p>
+                                    <a href="{{ route('admin.ganado.show', $animal->parentage->padre_id) }}" class="text-sm font-bold text-bovi-green-800 hover:underline">
+                                        {{ $animal->parentage->padre->nombre ?? $animal->parentage->padre->codigo_nfc }}
+                                    </a>
+                                    <p class="text-xs text-gray-500">{{ $animal->parentage->padre->codigo_nfc }}</p>
+                                </div>
+                                @endif
+                                @if($animal->parentage->madre)
+                                <div class="p-3 bg-bovi-brown-50 border border-bovi-brown-200 rounded-lg text-center">
+                                    <p class="text-xs text-gray-500 mb-1">Madre (Vaca)</p>
+                                    <a href="{{ route('admin.ganado.show', $animal->parentage->madre_id) }}" class="text-sm font-bold text-bovi-brown-600 hover:underline">
+                                        {{ $animal->parentage->madre->nombre ?? $animal->parentage->madre->codigo_nfc }}
+                                    </a>
+                                    <p class="text-xs text-gray-500">{{ $animal->parentage->madre->codigo_nfc }}</p>
+                                </div>
+                                @endif
+                            </div>
+                        </div>
+                        @endif
+                        <!-- Crías -->
+                        @if($crias->isNotEmpty())
+                        <div>
+                            <p class="text-xs font-semibold text-gray-500 uppercase mb-2">
+                                Crías registradas ({{ $crias->count() }})
+                            </p>
+                            <div class="space-y-2">
+                                @foreach($crias->take(5) as $cria)
+                                <div class="flex items-center justify-between p-2 bg-gray-50 rounded-lg border border-gray-200 hover:border-bovi-green-400 transition-colors">
+                                    <div>
+                                        <a href="{{ route('admin.ganado.show', $cria->animal_id) }}" class="text-sm font-semibold text-bovi-green-800 hover:underline">
+                                            {{ $cria->animal->nombre ?? $cria->animal->codigo_nfc }}
+                                        </a>
+                                        <p class="text-xs text-gray-500">{{ $cria->animal->codigo_nfc }}</p>
+                                    </div>
+                                    @if($cria->fecha_nacimiento)
+                                    <span class="text-xs text-gray-400">{{ \Carbon\Carbon::parse($cria->fecha_nacimiento)->format('d/m/Y') }}</span>
+                                    @endif
+                                </div>
+                                @endforeach
+                                @if($crias->count() > 5)
+                                <p class="text-xs text-gray-400 text-right">+{{ $crias->count() - 5 }} crías más</p>
+                                @endif
+                            </div>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+                @endif
+
             </div>
 
             <!-- Sidebar Derecho -->

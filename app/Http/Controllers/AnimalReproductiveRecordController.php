@@ -46,6 +46,7 @@ class AnimalReproductiveRecordController extends Controller
             'fecha_dosis'             => 'nullable|date|before_or_equal:today',
             // Proceso
             'tipo_proceso'            => 'nullable|in:embrion,inseminacion,monta_natural',
+            'fecha_insercion'         => 'nullable|date|before_or_equal:today',
             'fecha_prenez'            => 'nullable|date|before_or_equal:today',
             // Nacimiento
             'fecha_estimada_parto'    => [
@@ -53,6 +54,10 @@ class AnimalReproductiveRecordController extends Controller
                 'date',
                 'after:fecha_prenez',   // el parto siempre es posterior a la preñez
             ],
+            // Re-palpación
+            'repalpacion'             => 'boolean',
+            'fecha_repalpacion'       => 'nullable|date|before_or_equal:today',
+            'repalpacion_efectiva'    => 'nullable|boolean',
             // Generales
             'observaciones'           => 'nullable|string|max:1000',
         ], [
@@ -60,16 +65,44 @@ class AnimalReproductiveRecordController extends Controller
             'fecha_dosis.before_or_equal'      => 'La fecha de dosis no puede ser futura.',
             'fecha_prenez.before_or_equal'     => 'La fecha de preñez no puede ser futura.',
             'fecha_estimada_parto.after'       => 'La fecha estimada de parto debe ser posterior a la fecha de preñez.',
+            'fecha_repalpacion.before_or_equal'=> 'La fecha de re-palpación no puede ser futura.',
         ]);
 
-        // Normalizar el checkbox boolean
+        // Normalizar los checkbox / radios a booleanos
         $validated['palpacion'] = $request->boolean('palpacion');
+        $validated['repalpacion'] = $request->boolean('repalpacion');
+        $validated['repalpacion_efectiva'] = $request->has('repalpacion_efectiva') ? $request->boolean('repalpacion_efectiva') : null;
 
         // Regla de negocio: si marcó palpación, la fecha es obligatoria
         if ($validated['palpacion'] && empty($validated['fecha_palpacion'])) {
             return back()->withInput()->withErrors([
                 'fecha_palpacion' => 'Si se realizó palpación, la fecha es obligatoria.',
             ]);
+        }
+
+        // Si indicó re-palpación, la fecha es obligatoria
+        if ($validated['repalpacion'] && empty($validated['fecha_repalpacion'])) {
+            return back()->withInput()->withErrors([
+                'fecha_repalpacion' => 'Si registras re-palpación, la fecha es obligatoria.',
+            ]);
+        }
+
+        // Si la re-palpación fue efectiva y no existe fecha estimada de parto,
+        // intentar calcularla desde fecha_prenez o fecha_insercion (283 días por defecto).
+        if (!empty($validated['repalpacion_efectiva']) && empty($validated['fecha_estimada_parto'])) {
+            $base = $validated['fecha_prenez'] ?? $validated['fecha_insercion'] ?? null;
+            if ($base) {
+                try {
+                    $d = \Carbon\Carbon::parse($base)->addDays(283);
+                    $validated['fecha_estimada_parto'] = $d->toDateString();
+                    // Si no existía fecha_prenez y tenemos fecha_insercion, usarla como fecha_prenez
+                    if (empty($validated['fecha_prenez']) && !empty($validated['fecha_insercion'])) {
+                        $validated['fecha_prenez'] = $validated['fecha_insercion'];
+                    }
+                } catch (\Exception $e) {
+                    // ignore parse errors
+                }
+            }
         }
 
         $animal->reproductiveRecords()->create([
@@ -115,22 +148,51 @@ class AnimalReproductiveRecordController extends Controller
             'dosis_reproductiva'      => 'nullable|string|max:255',
             'fecha_dosis'             => 'nullable|date|before_or_equal:today',
             'tipo_proceso'            => 'nullable|in:embrion,inseminacion,monta_natural',
+            'fecha_insercion'         => 'nullable|date|before_or_equal:today',
             'fecha_prenez'            => 'nullable|date|before_or_equal:today',
             'fecha_estimada_parto'    => ['nullable', 'date', 'after:fecha_prenez'],
+            'repalpacion'             => 'boolean',
+            'fecha_repalpacion'       => 'nullable|date|before_or_equal:today',
+            'repalpacion_efectiva'    => 'nullable|boolean',
             'observaciones'           => 'nullable|string|max:1000',
         ], [
             'fecha_palpacion.before_or_equal'  => 'La fecha de palpación no puede ser futura.',
             'fecha_dosis.before_or_equal'      => 'La fecha de dosis no puede ser futura.',
             'fecha_prenez.before_or_equal'     => 'La fecha de preñez no puede ser futura.',
             'fecha_estimada_parto.after'       => 'La fecha estimada de parto debe ser posterior a la fecha de preñez.',
+            'fecha_repalpacion.before_or_equal'=> 'La fecha de re-palpación no puede ser futura.',
         ]);
 
+        // Normalizar booleans
         $validated['palpacion'] = $request->boolean('palpacion');
+        $validated['repalpacion'] = $request->boolean('repalpacion');
+        $validated['repalpacion_efectiva'] = $request->has('repalpacion_efectiva') ? $request->boolean('repalpacion_efectiva') : null;
 
         if ($validated['palpacion'] && empty($validated['fecha_palpacion'])) {
             return back()->withInput()->withErrors([
                 'fecha_palpacion' => 'Si se realizó palpación, la fecha es obligatoria.',
             ]);
+        }
+
+        if ($validated['repalpacion'] && empty($validated['fecha_repalpacion'])) {
+            return back()->withInput()->withErrors([
+                'fecha_repalpacion' => 'Si registras re-palpación, la fecha es obligatoria.',
+            ]);
+        }
+
+        if (!empty($validated['repalpacion_efectiva']) && empty($validated['fecha_estimada_parto'])) {
+            $base = $validated['fecha_prenez'] ?? $validated['fecha_insercion'] ?? null;
+            if ($base) {
+                try {
+                    $d = \Carbon\Carbon::parse($base)->addDays(283);
+                    $validated['fecha_estimada_parto'] = $d->toDateString();
+                    if (empty($validated['fecha_prenez']) && !empty($validated['fecha_insercion'])) {
+                        $validated['fecha_prenez'] = $validated['fecha_insercion'];
+                    }
+                } catch (\Exception $e) {
+                    // ignore
+                }
+            }
         }
 
         $reproductive->update($validated);

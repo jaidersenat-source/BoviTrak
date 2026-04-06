@@ -85,6 +85,32 @@
                     </p>
                 @enderror
                 <p class="mt-1 text-xs text-gray-500">Requerido si ingresaste fecha de lavado.</p>
+
+                {{-- Opción para agregar otro producto --}}
+                <div class="mt-3">
+                    <button type="button" id="toggleOtroProducto" class="text-sm text-blue-600 hover:underline">Agregar otro producto</button>
+                </div>
+
+                <div id="otroProductoWrap" class="mt-3 hidden">
+                    <label for="producto_lavado_secundario" class="block text-sm font-semibold text-gray-700 mb-2">Otro Producto (opcional)</label>
+                    <input
+                        type="text"
+                        name="producto_lavado_secundario"
+                        id="producto_lavado_secundario"
+                        value="{{ old('producto_lavado_secundario', $health->producto_lavado_secundario ?? '') }}"
+                        placeholder="Ej: Amitraz (mezcla)"
+                        class="input-bovi w-full @error('producto_lavado_secundario') border-red-500 bg-red-50 @enderror"
+                    >
+                    @error('producto_lavado_secundario')
+                        <p class="mt-1 text-sm text-red-600 flex items-center gap-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            {{ $message }}
+                        </p>
+                    @enderror
+                    <p class="mt-1 text-xs text-gray-500">Opcional. Completa sólo si aplicaste un segundo producto.</p>
+                </div>
             </div>
 
         </div>
@@ -212,4 +238,19 @@
         btn.disabled = true;
         btn.classList.add('opacity-75', 'cursor-not-allowed');
     });
+
+    // Toggle para mostrar el campo de producto secundario
+    (function () {
+        const toggle = document.getElementById('toggleOtroProducto');
+        const wrap = document.getElementById('otroProductoWrap');
+        if (!toggle || !wrap) return;
+
+        // Mostrar si ya existe valor
+        const existing = document.getElementById('producto_lavado_secundario') && document.getElementById('producto_lavado_secundario').value.trim() !== '';
+        if (existing) wrap.classList.remove('hidden');
+
+        toggle.addEventListener('click', function () {
+            wrap.classList.toggle('hidden');
+        });
+    })();
 </script>

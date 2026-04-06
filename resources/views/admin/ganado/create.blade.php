@@ -233,6 +233,8 @@
                             <option value="carne"          {{ old('proposito') == 'carne'          ? 'selected' : '' }}>🥩 Carne</option>
                             <option value="leche"          {{ old('proposito') == 'leche'          ? 'selected' : '' }}>🥛 Leche</option>
                             <option value="doble_proposito" {{ old('proposito') == 'doble_proposito' ? 'selected' : '' }}>⚡ Doble Propósito</option>
+                            <option value="levante"        {{ old('proposito') == 'levante'        ? 'selected' : '' }}>🐄 Levante (destete)</option>
+                            <option value="ceba"           {{ old('proposito') == 'ceba'           ? 'selected' : '' }}>🍖 Ceba (engorde)</option>
                         </select>
                         @error('proposito')
                             <p class="mt-1 text-sm text-red-600 flex items-center">
@@ -244,6 +246,8 @@
                         @enderror
                         <p class="mt-1 text-xs text-gray-500">Requerido</p>
                     </div>
+
+                    <!-- Categoría operativa: OMITIDA (usamos 'proposito' para inferir) -->
 
                     <!-- ══════════════════════════════════════════════ -->
                     <!-- NUEVO: Estado del animal                      -->

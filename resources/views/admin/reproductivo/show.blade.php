@@ -93,8 +93,34 @@
                         <p class="font-semibold">{{ $reproductive->tipo_proceso_label ?? '—' }}</p>
                     </div>
                     <div>
+                        <p class="text-xs text-gray-400 mb-1">Fecha de inserción / monta</p>
+                        <p class="font-semibold">{{ $reproductive->fecha_insercion?->format('d/m/Y') ?? '—' }}</p>
+                    </div>
+                    <div>
                         <p class="text-xs text-gray-400 mb-1">Fecha de preñez</p>
                         <p class="font-semibold">{{ $reproductive->fecha_prenez?->format('d/m/Y') ?? '—' }}</p>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Sección 5: Re-palpación --}}
+            <div class="bg-white rounded-xl shadow border border-gray-100 overflow-hidden">
+                <div class="px-5 py-3 bg-indigo-50 border-b border-indigo-100 flex items-center gap-2">
+                    <span class="w-6 h-6 flex items-center justify-center rounded-full bg-indigo-200 text-indigo-800 text-xs font-bold">5</span>
+                    <h3 class="font-bold text-indigo-800 text-sm uppercase tracking-wide">Re-palpación</h3>
+                </div>
+                <div class="p-5 grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+                    <div>
+                        <p class="text-xs text-gray-400 mb-1">Realizada</p>
+                        <p class="font-semibold">{{ $reproductive->repalpacion ? '✅ Sí' : '❌ No' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-400 mb-1">Fecha</p>
+                        <p class="font-semibold">{{ $reproductive->fecha_repalpacion?->format('d/m/Y') ?? '—' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-400 mb-1">Resultado</p>
+                        <p class="font-semibold">@if($reproductive->repalpacion_efectiva) Efectivo (Confirmado) @elseif($reproductive->repalpacion_efectiva === 0) No efectivo @else — @endif</p>
                     </div>
                 </div>
             </div>

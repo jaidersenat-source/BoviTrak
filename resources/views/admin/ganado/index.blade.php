@@ -112,6 +112,14 @@
                                placeholder="Buscar por NFC, raza o nombre…"
                                class="w-full pl-9 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#5a6e38]/30 focus:border-[#5a6e38] placeholder-gray-400">
                     </div>
+                    <div>
+                        <select name="categoria" class="input-bovi h-10 rounded-lg border border-gray-200 bg-white text-sm pr-8 pl-3">
+                            <option value="">Todas las categorías</option>
+                            <option value="produccion" {{ request('categoria')=='produccion' ? 'selected' : '' }}>Producción (Leche)</option>
+                            <option value="levante" {{ request('categoria')=='levante' ? 'selected' : '' }}>Levante</option>
+                            <option value="ceba" {{ request('categoria')=='ceba' ? 'selected' : '' }}>Ceba (Carne)</option>
+                        </select>
+                    </div>
                     <button type="submit"
                             class="bg-[#5a6e38] hover:bg-[#4a5c2e] text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition-colors whitespace-nowrap">
                         Buscar
@@ -145,6 +153,7 @@
                             <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider px-5 py-3.5 w-16">#</th>
                             <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider px-4 py-3.5">Código NFC</th>
                             <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider px-4 py-3.5">Raza</th>
+                            <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider px-4 py-3.5">Categoría</th>
                             <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider px-4 py-3.5">Nombre</th>
                             <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider px-4 py-3.5">Sexo</th>
                             <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider px-4 py-3.5">Enlace público</th>
@@ -171,6 +180,29 @@
                             {{-- Raza --}}
                             <td class="px-4 py-4">
                                 <span class="font-medium text-gray-700">{{ $animal->raza }}</span>
+                            </td>
+
+                            {{-- Categoría --}}
+                            <td class="px-4 py-4">
+                                @php
+                                    $catCode = $animal->categoria ?? $animal->proposito ?? null;
+                                    $map = [
+                                        'produccion' => ['label' => 'Producción (Leche)', 'class' => 'bg-yellow-50 text-yellow-800'],
+                                        'levante' => ['label' => 'Levante', 'class' => 'bg-blue-50 text-blue-800'],
+                                        'ceba' => ['label' => 'Ceba (Carne)', 'class' => 'bg-green-50 text-green-800'],
+                                        'leche' => ['label' => 'Producción (Leche)', 'class' => 'bg-yellow-50 text-yellow-800'],
+                                        'carne' => ['label' => 'Ceba (Carne)', 'class' => 'bg-green-50 text-green-800'],
+                                        'doble_proposito' => ['label' => 'Producción (Leche)', 'class' => 'bg-yellow-50 text-yellow-800'],
+                                    ];
+                                    $cat = $map[$catCode] ?? null;
+                                @endphp
+                                @if($cat)
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $cat['class'] }}">{{ $cat['label'] }}</span>
+                                @elseif($catCode)
+                                    <span class="text-sm text-gray-500">{{ $catCode }}</span>
+                                @else
+                                    <span class="text-sm text-gray-400">—</span>
+                                @endif
                             </td>
 
                             {{-- Nombre --}}
@@ -209,28 +241,28 @@
                                 <div class="flex items-center justify-end gap-1.5">
 
                                     {{-- Editar --}}
-                                    <a href="{{ route('admin.ganado.edit', $animal->id) }}" class="btn-action btn-edit">
+                                    <a href="{{ route('admin.ganado.edit', $animal->id) }}" class="btn-action btn-edit" title="Editar" aria-label="Editar">
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                         </svg>
-                                        Editar
+                                       
                                     </a>
 
                                     {{-- Ver --}}
-                                    <a href="{{ route('admin.ganado.show', $animal->id) }}" class="btn-action btn-view">
+                                    <a href="{{ route('admin.ganado.show', $animal->id) }}" class="btn-action btn-view" title="Ver" aria-label="Ver">
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                                         </svg>
-                                        Ver
+                                      
                                     </a>
 
                                     {{-- Seguimiento dropdown --}}
                                     <div class="relative" x-data="{ open: false }">
-                                        <button @click="open = !open" @click.outside="open = false" :aria-expanded="open" class="btn-action bg-amber-50 text-amber-700 hover:bg-amber-100">
+                                        <button @click="open = !open" @click.outside="open = false" :aria-expanded="open" class="btn-action bg-amber-50 text-amber-700 hover:bg-amber-100" title="Seguimiento" aria-label="Seguimiento">
                                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                                             </svg>
-                                            <span class="ml-1">Seguimiento</span>
+                                            <span class="ml-1"></span>
                                             <svg class="w-3 h-3 ml-2 transition-transform" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                                             </svg>
@@ -314,14 +346,14 @@
                                         </div>
                                     </div>
 
-                                    {{-- Eliminar --}}
-                                    <button type="button"
+                                        {{-- Eliminar --}}
+                                        <button type="button"
                                             onclick="openDeleteModal({{ $animal->id }}, '{{ $animal->codigo_nfc }}')"
-                                            class="btn-action btn-delete">
+                                            class="btn-action btn-delete" title="Eliminar" aria-label="Eliminar">
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                                         </svg>
-                                        Eliminar
+                                        
                                     </button>
 
                                     {{-- Form oculto eliminar --}}

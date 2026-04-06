@@ -202,6 +202,8 @@
                             <option value="carne" {{ old('proposito', $animal->proposito) == 'carne' ? 'selected' : '' }}>Carne</option>
                             <option value="leche" {{ old('proposito', $animal->proposito) == 'leche' ? 'selected' : '' }}>Leche</option>
                             <option value="doble_proposito" {{ old('proposito', $animal->proposito) == 'doble_proposito' ? 'selected' : '' }}>Doble Propósito</option>
+                            <option value="levante" {{ old('proposito', $animal->proposito) == 'levante' ? 'selected' : '' }}>Levante</option>
+                            <option value="ceba" {{ old('proposito', $animal->proposito) == 'ceba' ? 'selected' : '' }}>Ceba</option>
                         </select>
                         @error('proposito')
                             <p class="mt-1 text-sm text-red-600 flex items-center">
@@ -213,6 +215,8 @@
                         @enderror
                         <p class="mt-1 text-xs text-gray-500">Requerido</p>
                     </div>
+
+                    <!-- Categoría operativa: OMITIDA (usamos 'proposito' para inferir) -->
 
 
                      <!-- Estado -->

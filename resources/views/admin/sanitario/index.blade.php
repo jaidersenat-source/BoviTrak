@@ -48,6 +48,7 @@
                 Nuevo Registro
             </a>
         </div>
+        
 
         {{-- Sin registros --}}
         @if($records->isEmpty())
@@ -137,6 +138,12 @@
                                             <dt class="text-gray-500 w-20 shrink-0">Producto:</dt>
                                             <dd class="font-semibold text-gray-800">{{ $record->producto_lavado ?? '—' }}</dd>
                                         </div>
+                                        @if($record->producto_lavado_secundario)
+                                            <div class="flex gap-2">
+                                                <dt class="text-gray-500 w-20 shrink-0">Otro:</dt>
+                                                <dd class="font-semibold text-gray-800">{{ $record->producto_lavado_secundario }}</dd>
+                                            </div>
+                                        @endif
                                     </dl>
                                 @else
                                     <p class="text-sm text-gray-400 italic">No registrado</p>

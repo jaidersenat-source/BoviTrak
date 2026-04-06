@@ -26,11 +26,23 @@ class MilkProductionController extends Controller
             'liters' => 'required|numeric|min:0',
             'shift' => 'nullable|string|max:20',
             'somatic_cells' => 'nullable|integer|min:0',
+            'coagulos' => 'nullable|boolean',
+            'mastitis' => 'nullable|boolean',
+            'nipple_damage' => 'nullable|boolean',
+            'nipple_damage_notes' => 'nullable|string|max:1000',
+            'duct_blockage' => 'nullable|boolean',
+            'treatment_dose' => 'nullable|string|max:255',
+            'treatment_date' => 'nullable|date',
+            'treatment_next_date' => 'nullable|date',
+            'treatment_estimated_days' => 'nullable|integer|min:0',
             'notes' => 'nullable|string|max:1000',
         ]);
 
-
+        // coerciones de booleanos
         $data['mastitis'] = $request->boolean('mastitis');
+        $data['coagulos'] = $request->boolean('coagulos');
+        $data['nipple_damage'] = $request->boolean('nipple_damage');
+        $data['duct_blockage'] = $request->boolean('duct_blockage');
         $data['user_id'] = auth()->id();
 
         $animal->milkProductions()->create($data);
@@ -57,11 +69,22 @@ class MilkProductionController extends Controller
             'liters' => 'required|numeric|min:0',
             'shift' => 'nullable|string|max:20',
             'somatic_cells' => 'nullable|integer|min:0',
+            'coagulos' => 'nullable|boolean',
+            'mastitis' => 'nullable|boolean',
+            'nipple_damage' => 'nullable|boolean',
+            'nipple_damage_notes' => 'nullable|string|max:1000',
+            'duct_blockage' => 'nullable|boolean',
+            'treatment_dose' => 'nullable|string|max:255',
+            'treatment_date' => 'nullable|date',
+            'treatment_next_date' => 'nullable|date',
+            'treatment_estimated_days' => 'nullable|integer|min:0',
             'notes' => 'nullable|string|max:1000',
         ]);
 
-
         $data['mastitis'] = $request->boolean('mastitis');
+        $data['coagulos'] = $request->boolean('coagulos');
+        $data['nipple_damage'] = $request->boolean('nipple_damage');
+        $data['duct_blockage'] = $request->boolean('duct_blockage');
 
         $milk->update($data);
 

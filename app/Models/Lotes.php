@@ -19,6 +19,9 @@ class Lotes extends Model
         'tiempo_ocupacion_dias',
         'tiempo_descanso_dias',
         'aplicacion_abonos',
+        'fecha_roceria',
+        'fecha_inicio_ocupacion',
+        'jornales',
         'area_ha',
         'observaciones',
         'user_id',
@@ -27,6 +30,9 @@ class Lotes extends Model
     protected $casts = [
         'tiempo_ocupacion_dias' => 'integer',
         'tiempo_descanso_dias' => 'integer',
+        'fecha_roceria' => 'date',
+        'fecha_inicio_ocupacion' => 'date',
+        'jornales' => 'integer',
         'area_ha' => 'decimal:2',
     ];
 

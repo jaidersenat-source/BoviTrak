@@ -40,4 +40,19 @@ class AnimalWeightController extends Controller
             ->route('animals.weights.index', $animal->id)
             ->with('success', 'Peso registrado correctamente.');
     }
+
+/**
+     * Actualiza la frecuencia de pesaje del animal (mensual/quincenal)
+     */
+    public function setFrequency(Request $request, int $animalId)
+    {
+        $animal = Animal::findOrFail($animalId);
+        $validated = $request->validate([
+            'frecuencia' => ['required', 'in:mensual,quincenal'],
+        ]);
+        $animal->frecuencia_peso = $validated['frecuencia'];
+        $animal->save();
+        return redirect()->back()->with('success', 'Frecuencia de pesaje actualizada.');
+    }
+
 }

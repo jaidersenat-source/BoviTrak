@@ -17,6 +17,14 @@ class MilkProduction extends Model
         'shift',
         'somatic_cells',
         'mastitis',
+        'coagulos',
+        'nipple_damage',
+        'nipple_damage_notes',
+        'duct_blockage',
+        'treatment_dose',
+        'treatment_date',
+        'treatment_next_date',
+        'treatment_estimated_days',
         'notes',
         'user_id',
     ];
@@ -25,6 +33,11 @@ class MilkProduction extends Model
         'date' => 'date',
         'liters' => 'decimal:2',
         'mastitis' => 'boolean',
+        'coagulos' => 'boolean',
+        'nipple_damage' => 'boolean',
+        'duct_blockage' => 'boolean',
+        'treatment_date' => 'date',
+        'treatment_next_date' => 'date',
         'somatic_cells' => 'integer',
     ];
 

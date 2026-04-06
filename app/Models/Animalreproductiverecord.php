@@ -18,9 +18,14 @@ class AnimalReproductiveRecord extends Model
         'fecha_dosis',
         // Proceso
         'tipo_proceso',
+        'fecha_insercion',
         'fecha_prenez',
         // Nacimiento
         'fecha_estimada_parto',
+        // Re-palpación / seguimiento
+        'repalpacion',
+        'fecha_repalpacion',
+        'repalpacion_efectiva',
         // Generales
         'observaciones',
         'registrado_por',
@@ -32,6 +37,10 @@ class AnimalReproductiveRecord extends Model
         'fecha_dosis'          => 'date',
         'fecha_prenez'         => 'date',
         'fecha_estimada_parto' => 'date',
+        'fecha_insercion'      => 'date',
+        'fecha_repalpacion'    => 'date',
+        'repalpacion'          => 'boolean',
+        'repalpacion_efectiva' => 'boolean',
     ];
 
     // ─── Labels para el enum tipo_proceso ─────────────────────

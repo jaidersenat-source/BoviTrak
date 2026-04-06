@@ -115,6 +115,16 @@
         @media (max-width: 640px) {
             .kpi-card { padding: 16px 16px 14px; }
         }
+
+        /* Bell alert animation */
+        .bell-alert { color: #a83244; }
+        .bell-pulse { animation: bellPulse 1.3s infinite; }
+        @keyframes bellPulse {
+            0% { transform: translateY(0); }
+            25% { transform: translateY(-3px) scale(1.02); }
+            50% { transform: translateY(0); }
+            100% { transform: translateY(0); }
+        }
     </style>
 
     <div class="dash max-w-screen-xl mx-auto px-4 sm:px-6 py-7">
@@ -130,6 +140,39 @@
                 <p class="text-sm text-[var(--text-muted)] mt-0.5">Hato bovino · {{ now()->format('d \d\e F, Y') }}</p>
             </div>
             <div class="flex items-center gap-2">
+                {{-- Botón campana de alertas --}}
+                <div class="relative">
+                    <button id="alertsBtn" class="relative inline-flex items-center justify-center w-10 h-10 rounded-lg hover:bg-gray-100 {{ ($alertsCount ?? 0) > 0 ? 'bell-pulse' : '' }}" title="Alertas">
+                        <span class="sr-only">Alertas</span>
+                        <svg class="w-5 h-5 {{ ($alertsCount ?? 0) > 0 ? 'bell-alert' : 'text-[var(--rose)]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1"/></svg>
+                        @if(($alertsCount ?? 0) > 0)
+                        <span class="absolute -top-0.5 -right-0.5 inline-flex items-center justify-center px-1.5 py-0.5 text-xs rounded-full" style="background:#fff;color:var(--rose);border:1px solid var(--rose);font-weight:700">{{ $alertsCount }}</span>
+                        @endif
+                    </button>
+                    <div id="alertsDropdown" class="hidden z-50 origin-top-right absolute right-0 mt-2 w-96 bg-white border border-[var(--border)] rounded-lg shadow-lg">
+                        <div class="p-3 text-sm font-semibold border-b">Alertas pendientes ({{ $alertsCount ?? 0 }})</div>
+                        <div class="max-h-72 overflow-auto">
+                            @forelse($alerts ?? [] as $a)
+                            <a href="{{ isset($a['type']) && $a['type'] === 'milk' ? route('animals.milk.index', $a['animal_id']) : route('animals.weights.index', $a['animal_id']) }}" class="block px-3 py-2 hover:bg-gray-50 border-b last:border-b-0">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-semibold">{{ $a['name'] }}</p>
+                                        <p class="text-xs text-[var(--text-muted)]">{{ $a['issue'] ?? ucfirst($a['proposito'] ?? '') }} · {{ $a['last_date'] ?? ($a['date'] ?? '—') }}</p>
+                                    </div>
+                                    <div class="text-right text-xs text-[var(--text-muted)]">
+                                        {{ isset($a['type']) && $a['type'] === 'milk' ? 'Leche' : 'Peso' }}
+                                    </div>
+                                </div>
+                            </a>
+                            @empty
+                            <div class="p-3 text-sm text-[var(--text-muted)]">No hay alertas pendientes.</div>
+                            @endforelse
+                        </div>
+                        <div class="p-2 border-t text-center">
+                            <a href="#" class="text-xs text-[var(--green-mid)] hover:underline">Ver todas las alertas</a>
+                        </div>
+                    </div>
+                </div>
                 <a href="{{ route('admin.ganado.index') }}"
                    class="text-sm font-semibold text-[var(--green-mid)] border border-[var(--green-mid)] px-4 py-2 rounded-lg hover:bg-[var(--green-pale)] transition-colors">
                     Ver Ganado
@@ -143,6 +186,8 @@
                 </a>
             </div>
         </div>
+
+        
 
         {{-- ══ KPI ROW ══ --}}
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -193,55 +238,83 @@
                 <p class="text-xs text-[var(--text-muted)] mt-2">Este mes · {{ $pendingVaccinations ?? 0 }} pendientes</p>
             </div>
 
-            {{-- Alertas / Pendientes --}}
+            {{-- Alertas (tarjeta pequeña) --}}
             <div class="kpi-card kpi-rose fade-up d4">
                 <div class="kpi-icon bg-[var(--rose-pale)]">
                     <svg class="w-5 h-5 text-[var(--rose)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1"/>
                     </svg>
                 </div>
-                <p class="text-xs font-semibold text-[var(--text-muted)] mb-1">Alertas Activas</p>
+                <p class="text-xs font-semibold text-[var(--text-muted)] mb-1">Alertas</p>
                 <div class="flex items-baseline gap-2">
                     <span class="text-3xl font-bold text-[var(--text-main)]">{{ $alertsCount ?? 0 }}</span>
                 </div>
-                <p class="text-xs text-[var(--text-muted)] mt-2">Sanidad · Peso · Reproducción</p>
+                <p class="text-xs text-[var(--text-muted)] mt-2">Pendientes · <a href="#" onclick="document.getElementById('alertsBtn')?.click(); return false;" class="text-[var(--green-mid)] hover:underline">Ver campana</a></p>
             </div>
+
+            
         </div>
 
         {{-- ══ FILA CENTRAL: Gráfico principal + Composición + Accesos ══ --}}
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-4">
 
-            {{-- Gráfico producción leche --}}
-            <div class="panel lg:col-span-7 fade-up d3">
-                <div class="panel-header">
-                    <span class="panel-title">Producción de Leche</span>
-                    <div class="flex items-center gap-2">
-                        <span class="badge bg-[var(--sky-pale)] text-[var(--sky)]">Últimas 8 semanas</span>
-                    </div>
+          {{-- Gráfico producción leche --}}
+<div class="panel lg:col-span-7 fade-up d3">
+    <div class="panel-header">
+        <span class="panel-title">Producción de Leche</span>
+        <div class="flex items-center gap-2">
+            <span class="badge bg-[var(--sky-pale)] text-[var(--sky)]">Últimas 8 semanas</span>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="flex items-center gap-6 mb-4">
+            <div>
+                <p class="text-xs text-[var(--text-muted)]">Total período</p>
+                <p class="text-xl font-bold text-[var(--text-main)]">
+                    {{ isset($totalMilkPeriod) ? number_format($totalMilkPeriod, 0, ',', '.') : '—' }}
+                    <span class="text-sm font-normal text-[var(--text-muted)]">L</span>
+                </p>
+            </div>
+            <div class="w-px h-8 bg-[var(--border)]"></div>
+            <div>
+                <p class="text-xs text-[var(--text-muted)]">Mejor semana</p>
+                <p class="text-xl font-bold text-[var(--sky)]">
+                    {{ isset($bestWeekMilk) ? number_format($bestWeekMilk, 0, ',', '.') : '—' }}
+                    <span class="text-sm font-normal text-[var(--text-muted)]">L</span>
+                </p>
+            </div>
+            <div class="w-px h-8 bg-[var(--border)]"></div>
+            <div>
+                <p class="text-xs text-[var(--text-muted)]">Promedio/día</p>
+                <p class="text-xl font-bold text-[var(--text-main)]">
+                    {{ isset($avgMilk) ? number_format($avgMilk, 2, ',', '.') : '—' }}
+                    <span class="text-sm font-normal text-[var(--text-muted)]">L</span>
+                </p>
+            </div>
+        </div>
+ 
+        <div class="mb-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs text-[var(--text-muted)]">Producción hoy</p>
+                    <p class="text-3xl font-bold text-[var(--text-main)]">
+                        {{ isset($milkToday) ? number_format($milkToday, 2, ',', '.') : '0' }}
+                        <span class="text-sm font-normal text-[var(--text-muted)]">L</span>
+                    </p>
                 </div>
-                <div class="panel-body">
-                    <div class="flex items-center gap-6 mb-4">
-                        <div>
-                            <p class="text-xs text-[var(--text-muted)]">Total período</p>
-                            <p class="text-xl font-bold text-[var(--text-main)]">{{ $totalMilkPeriod ?? '—' }} <span class="text-sm font-normal text-[var(--text-muted)]">L</span></p>
-                        </div>
-                        <div class="w-px h-8 bg-[var(--border)]"></div>
-                        <div>
-                            <p class="text-xs text-[var(--text-muted)]">Mejor semana</p>
-                            <p class="text-xl font-bold text-[var(--sky)]">{{ $bestWeekMilk ?? '—' }} <span class="text-sm font-normal text-[var(--text-muted)]">L</span></p>
-                        </div>
-                        <div class="w-px h-8 bg-[var(--border)]"></div>
-                        <div>
-                            <p class="text-xs text-[var(--text-muted)]">Promedio/día</p>
-                            <p class="text-xl font-bold text-[var(--text-main)]">{{ $avgMilk ?? '—' }} <span class="text-sm font-normal text-[var(--text-muted)]">L</span></p>
-                        </div>
-                    </div>
-                    <div style="height:200px; position:relative;">
-                        <canvas id="chartMilk"></canvas>
-                    </div>
+                <div class="text-right">
+                    <p class="text-xs text-[var(--text-muted)]">Periodo mostrado</p>
+                    <p class="text-sm font-semibold text-[var(--text-muted)]">Últimas 8 semanas</p>
                 </div>
             </div>
-
+        </div>
+ 
+        {{-- Contenedor del canvas --}}
+        <div style="position:relative; width:100%; height:220px;">
+            <canvas id="chartMilk"></canvas>
+        </div>
+    </div>
+</div>
             {{-- Composición del hato --}}
             <div class="panel lg:col-span-5 fade-up d4">
                 <div class="panel-header">
@@ -414,133 +487,218 @@
         </div>
     </div>
 
-    @push('scripts')
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const sand = '#f7f5f1';
+(function() {
 
-        // ── Shared chart defaults ──
-        Chart.defaults.font.family = "'DM Sans', sans-serif";
-        Chart.defaults.color = '#7a7d72';
+    Chart.defaults.font.family = "'DM Sans', sans-serif";
+    Chart.defaults.color = '#7a7d72';
 
-        // ── Milk line chart ──
-        const milkCtx = document.getElementById('chartMilk');
-        if (milkCtx) {
-            const labels = {!! json_encode($chartLabels ?? ['Sem 1','Sem 2','Sem 3','Sem 4','Sem 5','Sem 6','Sem 7','Sem 8']) !!};
-            const data   = {!! json_encode($chartData   ?? [112, 138, 125, 156, 163, 149, 171, 168]) !!};
+    // ── Helpers ────────────────────────────────────────────────────────────
+    function norm(v) {
+        if (v === null || v === undefined || v === '') return 0;
+        const n = parseFloat(String(v).replace(',', '.'));
+        return isNaN(n) ? 0 : n;
+    }
 
-            const grad = milkCtx.getContext('2d').createLinearGradient(0, 0, 0, 200);
-            grad.addColorStop(0,   'rgba(29,111,164,.22)');
-            grad.addColorStop(1,   'rgba(29,111,164,.0)');
+    function showEmpty(canvas, msg) {
+        canvas.style.display = 'none';
+        const el = document.createElement('div');
+        el.style.cssText = 'text-align:center;font-size:13px;padding:3rem 0;opacity:.5;color:inherit';
+        el.innerText = msg ?? 'Sin datos disponibles';
+        canvas.parentElement.appendChild(el);
+    }
 
+    // ── Milk line chart ────────────────────────────────────────────────────
+    const milkCtx = document.getElementById('chartMilk');
+    if (milkCtx) {
+        const labels   = {!! json_encode($chartLabels ?? ['Sem 1','Sem 2','Sem 3','Sem 4','Sem 5','Sem 6','Sem 7','Sem 8']) !!};
+        const rawData  = {!! json_encode($chartData   ?? [112, 138, 125, 156, 163, 149, 171, 168]) !!};
+        const data     = rawData.map(norm);
+        const total    = data.reduce((s, v) => s + v, 0);
+
+        if (total === 0) {
+            showEmpty(milkCtx, 'Sin datos de producción en el periodo seleccionado');
+        } else {
+            const suggestedMax = Math.ceil((Math.max(...data) + 10) / 10) * 10;
             new Chart(milkCtx, {
                 type: 'line',
                 data: {
                     labels,
                     datasets: [{
-                        label: 'Litros',
                         data,
                         borderColor: '#1d6fa4',
-                        backgroundColor: grad,
+                        backgroundColor: 'rgba(29,111,164,0.08)',
                         fill: true,
                         tension: 0.4,
-                        pointBackgroundColor: '#1d6fa4',
                         pointRadius: 4,
                         pointHoverRadius: 6,
+                        pointBackgroundColor: '#1d6fa4',
+                        pointBorderWidth: 0,
                         borderWidth: 2.5,
                     }]
                 },
                 options: {
-                    responsive: true, maintainAspectRatio: false,
+                    responsive: true,
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: { display: false },
                         tooltip: {
                             backgroundColor: '#1e2318',
-                            titleFont: { weight: '700', size: 12 },
-                            bodyFont:  { size: 12 },
+                            titleFont: { weight: '500', size: 12 },
+                            bodyFont: { size: 12 },
                             padding: 10,
-                            cornerRadius: 8,
-                            callbacks: { label: ctx => `  ${ctx.parsed.y} litros` }
+                            cornerRadius: 6,
+                            callbacks: { label: ctx => '  ' + ctx.parsed.y.toFixed(2) + ' L' }
                         }
                     },
                     scales: {
-                        x: { grid: { display: false }, border: { display: false } },
-                        y: {
-                            grid: { color: '#f0eeea', drawBorder: false },
+                        x: {
+                            grid: { display: false },
                             border: { display: false },
-                            ticks: { callback: v => v + ' L' }
+                            ticks: {
+                                color: '#7a7d72',
+                                maxRotation: 0,
+                                autoSkip: true,
+                                maxTicksLimit: 8
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            suggestedMax,
+                            grid: { color: '#f0eeea', borderDash: [4, 4] },
+                            border: { display: false },
+                            ticks: {
+                                color: '#7a7d72',
+                                callback: v => v + ' L'
+                            }
                         }
                     }
                 }
             });
         }
+    }
 
-        // ── Weight bar chart ──
-        const wCtx = document.getElementById('chartWeight');
-        if (wCtx) {
-            const wLabels = {!! json_encode($weightLabels ?? ['Ene','Feb','Mar','Abr','May','Jun']) !!};
-            const wData   = {!! json_encode($weightData   ?? [380, 385, 390, 388, 395, 400]) !!};
+    // ── Weight bar chart ───────────────────────────────────────────────────
+    const wCtx = document.getElementById('chartWeight');
+    if (wCtx) {
+        const wLabels = {!! json_encode($weightLabels ?? ['Ene','Feb','Mar','Abr','May','Jun']) !!};
+        const wRaw    = {!! json_encode($weightData   ?? [380, 385, 390, 388, 395, 400]) !!};
+        const wData   = wRaw.map(norm);
+
+        if (wData.reduce((s, v) => s + v, 0) === 0) {
+            showEmpty(wCtx, 'Sin datos de peso en el periodo');
+        } else {
+            const wMin = Math.max(0, Math.min(...wData) - 20);
+            const wMax = Math.ceil((Math.max(...wData) + 15) / 10) * 10;
 
             new Chart(wCtx, {
                 type: 'bar',
                 data: {
                     labels: wLabels,
                     datasets: [{
-                        label: 'Peso promedio (kg)',
                         data: wData,
                         backgroundColor: '#eef3e6',
                         hoverBackgroundColor: '#5a6e38',
-                        borderRadius: 6,
+                        borderRadius: 5,
                         borderSkipped: false,
                     }]
                 },
                 options: {
-                    responsive: true, maintainAspectRatio: false,
+                    responsive: true,
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: { display: false },
                         tooltip: {
                             backgroundColor: '#1e2318',
-                            padding: 10, cornerRadius: 8,
-                            callbacks: { label: ctx => `  ${ctx.parsed.y} kg` }
+                            padding: 10,
+                            cornerRadius: 8,
+                            callbacks: { label: ctx => '  ' + ctx.parsed.y.toFixed(1) + ' kg' }
                         }
                     },
                     scales: {
-                        x: { grid: { display: false }, border: { display: false } },
+                        x: {
+                            grid: { display: false },
+                            border: { display: false },
+                            ticks: { maxRotation: 0 }
+                        },
                         y: {
+                            min: wMin,
+                            max: wMax,
                             grid: { color: '#f0eeea' },
                             border: { display: false },
-                            ticks: { callback: v => v + ' kg' },
-                            min: (Math.min(...wData) - 20)
+                            ticks: { callback: v => v + ' kg' }
                         }
                     }
                 }
             });
         }
+    }
 
-        // ── Doughnut gauge ──
-        const gCtx = document.getElementById('chartGauge');
-        if (gCtx) {
-            const femalePct = {{ $femalePct ?? 60 }};
-            new Chart(gCtx, {
-                type: 'doughnut',
-                data: {
-                    datasets: [{
-                        data: [femalePct, 100 - femalePct],
-                        backgroundColor: ['#5a6e38', '#eef3e6'],
-                        borderWidth: 0,
-                        hoverOffset: 0,
-                    }]
-                },
-                options: {
-                    cutout: '72%',
-                    responsive: false,
-                    plugins: { legend: { display: false }, tooltip: { enabled: false } },
-                    animation: { animateRotate: true, duration: 900 }
+    // ── Alerts dropdown toggle ─────────────────────────────────────────────
+    const alertsBtn = document.getElementById('alertsBtn');
+    const alertsDropdown = document.getElementById('alertsDropdown');
+    if (alertsBtn && alertsDropdown) {
+        let movedToBody = false;
+        alertsBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            const isHidden = alertsDropdown.classList.contains('hidden');
+            if (isHidden) {
+                // move dropdown to body and position fixed so it overlays everything
+                if (!movedToBody) {
+                    document.body.appendChild(alertsDropdown);
+                    movedToBody = true;
                 }
-            });
-        }
-    });
-    </script>
-    @endpush
+                alertsDropdown.style.position = 'fixed';
+                alertsDropdown.style.zIndex = 9999;
+                // compute position near the button
+                const rect = alertsBtn.getBoundingClientRect();
+                const ddWidth = alertsDropdown.offsetWidth || 360;
+                let left = rect.right - ddWidth;
+                if (left < 8) left = 8;
+                const top = rect.bottom + 8;
+                alertsDropdown.style.left = left + 'px';
+                alertsDropdown.style.top = top + 'px';
+                alertsDropdown.classList.remove('hidden');
+            } else {
+                alertsDropdown.classList.add('hidden');
+            }
+        });
+        // cerrar al click fuera
+        document.addEventListener('click', function () {
+            if (!alertsDropdown.classList.contains('hidden')) alertsDropdown.classList.add('hidden');
+        });
+        // evitar cerrar al click dentro del dropdown
+        alertsDropdown.addEventListener('click', function (e) { e.stopPropagation(); });
+    }
+
+    // ── Doughnut gauge ─────────────────────────────────────────────────────
+    const gCtx = document.getElementById('chartGauge');
+    if (gCtx) {
+        const femalePct = {{ $femalePct ?? 60 }};
+        const pct = Math.min(100, Math.max(0, femalePct));
+        new Chart(gCtx, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [pct, 100 - pct],
+                    backgroundColor: ['#5a6e38', '#eef3e6'],
+                    borderWidth: 0,
+                    hoverOffset: 0,
+                }]
+            },
+            options: {
+                cutout: '72%',
+                responsive: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: false }
+                },
+                animation: { animateRotate: true, duration: 900 }
+            }
+        });
+    }
+
+})();
+</script>
 
 </x-app-layout>

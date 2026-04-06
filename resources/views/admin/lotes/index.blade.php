@@ -202,6 +202,11 @@
                                 <span class="mono text-sm font-semibold text-[var(--text-main)] bg-[var(--sand)] border border-[var(--border)] px-2.5 py-1 rounded-md inline-block">
                                     {{ $lote->codigo }}
                                 </span>
+                                @if(!empty($lote->is_resting) && $lote->is_resting)
+                                    <div class="mt-2">
+                                        <span class="text-xs bg-red-50 text-red-700 px-2 py-1 rounded">Descanso hasta {{ $lote->rest_until->format('d/m/Y') }} ({{ number_format(round($lote->dias_restantes ?? 0), 0) }} días)</span>
+                                    </div>
+                                @endif
                             </td>
 
                             {{-- Pastura --}}

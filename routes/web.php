@@ -13,12 +13,14 @@ use App\Http\Controllers\LotesController;
 use App\Http\Controllers\MilkProductionController;
 
 Route::get('/', function () {
-    return redirect()->route('login');
+    return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+use App\Http\Controllers\DashboardController;
+
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 // Ruta pública para ver animales (sin autenticación)
 Route::get('/public/animal/{token}', [PublicAnimalController::class, 'show'])->name('public.animal.show');
@@ -31,6 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('animals/{animal}')->name('animals.')->group(function () {
         Route::get('/weights',  [AnimalWeightController::class, 'index'])->name('weights.index');
         Route::post('/weights', [AnimalWeightController::class, 'store'])->name('weights.store');
+        Route::post('/weights/frecuencia', [AnimalWeightController::class, 'setFrequency'])->name('weights.setFrequency');
     
 
             // ── NUEVO: Vacunaciones ──────────────────────────────────────
@@ -48,6 +51,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/sanitario/{health}/edit', [AnimalHealthRecordController::class, 'edit'])->name('health.edit');
     Route::put('/sanitario/{health}',      [AnimalHealthRecordController::class, 'update'])->name('health.update');
     Route::delete('/sanitario/{health}',   [AnimalHealthRecordController::class, 'destroy'])->name('health.destroy');
+
+    // Rutas para registro en lote (lavado de lote)
+    Route::get('/sanitario/lote/create',   [AnimalHealthRecordController::class, 'createBatch'])->name('health.batch.create');
+    Route::post('/sanitario/lote',         [AnimalHealthRecordController::class, 'storeBatch'])->name('health.batch.store');
 
     // ── NUEVO: Proceso Reproductivo ──────────────────────────────
     Route::get('/reproductivo',                        [AnimalReproductiveRecordController::class, 'index'])->name('reproductive.index');

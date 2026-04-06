@@ -12,6 +12,7 @@ class AnimalHealthRecord extends Model
         // Sección 1
         'fecha_lavado',
         'producto_lavado',
+        'producto_lavado_secundario',
         // Sección 2
         'fecha_purga',
         'tipo_purgante',

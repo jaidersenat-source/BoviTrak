@@ -22,6 +22,7 @@ class Animal extends Model
         'sexo',
         'proposito',
         'estado',
+        'frecuencia_peso',
         'fecha_nacimiento',
         'fecha_ingreso_hato',
         'peso_aproximado',

@@ -14,7 +14,7 @@ class GanadoController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Animal::select('id', 'codigo_nfc', 'nombre', 'raza', 'sexo', 'public_token', 'created_at');
+        $query = Animal::select('id', 'codigo_nfc', 'nombre', 'raza', 'sexo', 'public_token', 'created_at', 'proposito');
         
         // Filtrar por búsqueda si existe
         if ($request->has('search') && $request->search != '') {
@@ -25,9 +25,22 @@ class GanadoController extends Controller
                   ->orWhere('nombre', 'like', '%' . $search . '%');
             });
         }
+
+        // Filtrar por categoría (derivada de 'proposito')
+        if ($request->has('categoria') && $request->categoria != '') {
+            $cat = $request->categoria;
+            $map = [
+                'produccion' => ['leche', 'doble_proposito'],
+                'levante' => ['levante'],
+                'ceba' => ['ceba', 'carne'],
+            ];
+            if (isset($map[$cat])) {
+                $query->whereIn('proposito', $map[$cat]);
+            }
+        }
         
         // Paginación para mejorar rendimiento - 12 animales por página
-        $animals = $query->orderBy('created_at', 'desc')->paginate(12);
+        $animals = $query->orderBy('created_at', 'desc')->paginate(12)->appends($request->only(['search','categoria']));
         
         return view('admin.ganado.index', compact('animals'));
     }
@@ -52,7 +65,7 @@ class GanadoController extends Controller
                 'nombre' => 'nullable|string|max:255',
                 'raza' => 'required|string|max:255',
                 'sexo' => 'required|in:macho,hembra',
-                'proposito' => 'required|in:carne,leche,doble_proposito',
+                'proposito' => 'required|in:carne,leche,doble_proposito,levante,ceba',
                 'estado' => 'required|in:activo,vendido,muerto',
                 'fecha_nacimiento' => 'nullable|date',
                 'fecha_ingreso_hato' => 'nullable|date',
@@ -120,7 +133,17 @@ class GanadoController extends Controller
      */
     public function show($id)
     {
-        $animal = Animal::findOrFail($id);
+        $animal = Animal::with([
+            'vaccinations'       => fn($q) => $q->orderByDesc('fecha_vacunacion'),
+            'healthRecords'      => fn($q) => $q->orderByDesc('created_at'),
+            'reproductiveRecords'=> fn($q) => $q->orderByDesc('created_at'),
+            'milkProductions'    => fn($q) => $q->orderByDesc('date')->limit(10),
+            'weights'            => fn($q) => $q->orderByDesc('measured_at')->limit(5),
+            'asPadre.animal',
+            'asMadre.animal',
+            'parentage.padre',
+            'parentage.madre',
+        ])->findOrFail($id);
         return view('admin.ganado.show', compact('animal'));
     }
 
@@ -146,7 +169,7 @@ class GanadoController extends Controller
                 'nombre' => 'nullable|string|max:255',
                 'raza' => 'required|string|max:255',
                 'sexo' => 'required|in:macho,hembra',
-                'proposito' => 'required|in:carne,leche,doble_proposito',
+                'proposito' => 'required|in:carne,leche,doble_proposito,levante,ceba',
                 'estado' => 'required|in:activo,vendido,muerto',
                 'fecha_nacimiento' => 'nullable|date',
                 'fecha_ingreso_hato' => 'nullable|date',
