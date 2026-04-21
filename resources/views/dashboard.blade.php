@@ -169,7 +169,7 @@
                             @endforelse
                         </div>
                         <div class="p-2 border-t text-center">
-                            <a href="#" class="text-xs text-[var(--green-mid)] hover:underline">Ver todas las alertas</a>
+                            <a href="/alerts" class="text-xs text-[var(--green-mid)] hover:underline">Ver todas las alertas</a>
                         </div>
                     </div>
                 </div>

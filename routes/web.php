@@ -17,6 +17,9 @@ Route::get('/', function () {
 });
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\CebaController;
+use App\Http\Controllers\AnimalHistoryController;
+use App\Http\Controllers\AdminHistoryController;
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
@@ -34,6 +37,18 @@ Route::middleware('auth')->group(function () {
         Route::get('/weights',  [AnimalWeightController::class, 'index'])->name('weights.index');
         Route::post('/weights', [AnimalWeightController::class, 'store'])->name('weights.store');
         Route::post('/weights/frecuencia', [AnimalWeightController::class, 'setFrequency'])->name('weights.setFrequency');
+        
+        // ── NUEVO: Módulo de Ceba (carne) ───────────────────────────
+        Route::get('/ceba', [CebaController::class, 'index'])->name('ceba.index');
+        Route::get('/ceba/create', [CebaController::class, 'create'])->name('ceba.create');
+        Route::post('/ceba', [CebaController::class, 'store'])->name('ceba.store');
+        Route::get('/ceba/{ceba}', [CebaController::class, 'show'])->name('ceba.show');
+        Route::get('/ceba/{ceba}/edit', [CebaController::class, 'edit'])->name('ceba.edit');
+        Route::put('/ceba/{ceba}', [CebaController::class, 'update'])->name('ceba.update');
+        Route::post('/ceba/{ceba}/registros', [CebaController::class, 'storeRegistro'])->name('ceba.registros.store');
+
+        // ── NUEVO: Historial Administrativo ─────────────────────────
+        Route::get('/historial', [AnimalHistoryController::class, 'show'])->name('historial');
     
 
             // ── NUEVO: Vacunaciones ──────────────────────────────────────
@@ -86,8 +101,10 @@ Route::middleware('auth')->group(function () {
     // Registro de Lotes: ahora manejado como módulo independiente (rutas en /admin/lotes)
 
 
- 
 }); // ← cierra animals
+
+// Ruta para ver todas las alertas (ganado + lotes)
+Route::get('/alerts', [AdminHistoryController::class, 'alerts'])->name('alerts.index');
 
     Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::prefix('ganado')->name('ganado.')->group(function () {
@@ -98,7 +115,15 @@ Route::middleware('auth')->group(function () {
             Route::get('{ganado}/edit', [GanadoController::class, 'edit'])->name('edit');
             Route::put('{ganado}', [GanadoController::class, 'update'])->name('update');
             Route::delete('{ganado}', [GanadoController::class, 'destroy'])->name('destroy');
+            
+                // Historial administrativo general (todo el ganado)
+                Route::get('historial', [AdminHistoryController::class, 'index'])->name('historial.index');
+                Route::get('historial/export', [AdminHistoryController::class, 'export'])->name('historial.export');
         }); // ← cierra ganado
+
+        // Historial administrativo general (todo el ganado) - ruta en /admin/historial
+        Route::get('historial', [AdminHistoryController::class, 'index'])->name('historial.index');
+        Route::get('historial/export', [AdminHistoryController::class, 'export'])->name('historial.export');
 
         // Rutas de Lotes como módulo independiente bajo /admin/lotes
         Route::prefix('lotes')->name('lotes.')->group(function () {

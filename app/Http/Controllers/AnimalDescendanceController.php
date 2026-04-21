@@ -42,35 +42,52 @@ class AnimalDescendanceController extends Controller
     public function store(Request $request, Animal $animal)
     {
         $validated = $request->validate([
-            'padre_id' => 'required|exists:animals,id',
-            'madre_id' => 'required|exists:animals,id',
+            'padre_id' => 'nullable|exists:animals,id',
+            'madre_id' => 'nullable|exists:animals,id',
+            'padre_nombre' => 'nullable|string|max:191',
+            'padre_raza' => 'nullable|string|max:191',
+            'madre_nombre' => 'nullable|string|max:191',
+            'madre_raza' => 'nullable|string|max:191',
             'fecha_nacimiento' => 'nullable|date',
             'observaciones' => 'nullable|string',
         ]);
 
         $errors = [];
 
-        if ((int) $validated['padre_id'] === (int) $animal->id) {
-            $errors['padre_id'] = 'El padre no puede ser el mismo animal.';
+        // Validación adicional: permitir padres no registrados (ej. embriones)
+        if (!empty($validated['padre_id'])) {
+            if ((int) $validated['padre_id'] === (int) $animal->id) {
+                $errors['padre_id'] = 'El padre no puede ser el mismo animal.';
+            }
+            $padre = Animal::find($validated['padre_id']);
+            if (! $padre) {
+                $errors['padre_id'] = 'Padre no encontrado.';
+            } elseif ($padre->sexo !== 'macho') {
+                $errors['padre_id'] = 'El registro seleccionado como padre no es un toro (sexo debe ser "macho").';
+            }
+        } else {
+            $padre = null;
+            // si no existe padre registrado, pedir al menos nombre o raza
+            if (empty($validated['padre_nombre']) && empty($validated['padre_raza'])) {
+                $errors['padre_nombre'] = 'Si el padre no está registrado, ingresa nombre o raza.';
+            }
         }
 
-        if ((int) $validated['madre_id'] === (int) $animal->id) {
-            $errors['madre_id'] = 'La madre no puede ser el mismo animal.';
-        }
-
-        $padre = Animal::find($validated['padre_id']);
-        $madre = Animal::find($validated['madre_id']);
-
-        if (! $padre) {
-            $errors['padre_id'] = 'Padre no encontrado.';
-        } elseif ($padre->sexo !== 'macho') {
-            $errors['padre_id'] = 'El registro seleccionado como padre no es un toro (sexo debe ser "macho").';
-        }
-
-        if (! $madre) {
-            $errors['madre_id'] = 'Madre no encontrada.';
-        } elseif ($madre->sexo !== 'hembra') {
-            $errors['madre_id'] = 'El registro seleccionado como madre no es una vaca (sexo debe ser "hembra").';
+        if (!empty($validated['madre_id'])) {
+            if ((int) $validated['madre_id'] === (int) $animal->id) {
+                $errors['madre_id'] = 'La madre no puede ser el mismo animal.';
+            }
+            $madre = Animal::find($validated['madre_id']);
+            if (! $madre) {
+                $errors['madre_id'] = 'Madre no encontrada.';
+            } elseif ($madre->sexo !== 'hembra') {
+                $errors['madre_id'] = 'El registro seleccionado como madre no es una vaca (sexo debe ser "hembra").';
+            }
+        } else {
+            $madre = null;
+            if (empty($validated['madre_nombre']) && empty($validated['madre_raza'])) {
+                $errors['madre_nombre'] = 'Si la madre no está registrada, ingresa nombre o raza.';
+            }
         }
 
         if (! empty($errors)) {
@@ -79,8 +96,12 @@ class AnimalDescendanceController extends Controller
 
         $desc = AnimalDescendance::create([
             'animal_id' => $animal->id,
-            'padre_id' => $padre->id,
-            'madre_id' => $madre->id,
+            'padre_id' => $padre->id ?? null,
+            'madre_id' => $madre->id ?? null,
+            'padre_nombre' => $validated['padre_nombre'] ?? null,
+            'padre_raza' => $validated['padre_raza'] ?? null,
+            'madre_nombre' => $validated['madre_nombre'] ?? null,
+            'madre_raza' => $validated['madre_raza'] ?? null,
             'fecha_nacimiento' => $validated['fecha_nacimiento'] ?? null,
             'observaciones' => $validated['observaciones'] ?? null,
             'registrado_por' => Auth::id(),
@@ -151,8 +172,12 @@ class AnimalDescendanceController extends Controller
         }
 
         $validated = $request->validate([
-            'padre_id' => 'required|exists:animals,id',
-            'madre_id' => 'required|exists:animals,id',
+            'padre_id' => 'nullable|exists:animals,id',
+            'madre_id' => 'nullable|exists:animals,id',
+            'padre_nombre' => 'nullable|string|max:191',
+            'padre_raza' => 'nullable|string|max:191',
+            'madre_nombre' => 'nullable|string|max:191',
+            'madre_raza' => 'nullable|string|max:191',
             'fecha_nacimiento' => 'nullable|date',
             'observaciones' => 'nullable|string',
         ]);
@@ -166,19 +191,41 @@ class AnimalDescendanceController extends Controller
             $errors['madre_id'] = 'La madre no puede ser el mismo animal.';
         }
 
-        $padre = Animal::find($validated['padre_id']);
-        $madre = Animal::find($validated['madre_id']);
+        // Similar lógica que en store: permitir padres no registrados
+        $errors = [];
 
-        if (! $padre) {
-            $errors['padre_id'] = 'Padre no encontrado.';
-        } elseif ($padre->sexo !== 'macho') {
-            $errors['padre_id'] = 'El registro seleccionado como padre no es un toro (sexo debe ser "macho").';
+        if (!empty($validated['padre_id'])) {
+            if ((int) $validated['padre_id'] === (int) $animal->id) {
+                $errors['padre_id'] = 'El padre no puede ser el mismo animal.';
+            }
+            $padre = Animal::find($validated['padre_id']);
+            if (! $padre) {
+                $errors['padre_id'] = 'Padre no encontrado.';
+            } elseif ($padre->sexo !== 'macho') {
+                $errors['padre_id'] = 'El registro seleccionado como padre no es un toro (sexo debe ser "macho").';
+            }
+        } else {
+            $padre = null;
+            if (empty($validated['padre_nombre']) && empty($validated['padre_raza'])) {
+                $errors['padre_nombre'] = 'Si el padre no está registrado, ingresa nombre o raza.';
+            }
         }
 
-        if (! $madre) {
-            $errors['madre_id'] = 'Madre no encontrada.';
-        } elseif ($madre->sexo !== 'hembra') {
-            $errors['madre_id'] = 'El registro seleccionado como madre no es una vaca (sexo debe ser "hembra").';
+        if (!empty($validated['madre_id'])) {
+            if ((int) $validated['madre_id'] === (int) $animal->id) {
+                $errors['madre_id'] = 'La madre no puede ser el mismo animal.';
+            }
+            $madre = Animal::find($validated['madre_id']);
+            if (! $madre) {
+                $errors['madre_id'] = 'Madre no encontrada.';
+            } elseif ($madre->sexo !== 'hembra') {
+                $errors['madre_id'] = 'El registro seleccionado como madre no es una vaca (sexo debe ser "hembra").';
+            }
+        } else {
+            $madre = null;
+            if (empty($validated['madre_nombre']) && empty($validated['madre_raza'])) {
+                $errors['madre_nombre'] = 'Si la madre no está registrada, ingresa nombre o raza.';
+            }
         }
 
         if (! empty($errors)) {
@@ -186,8 +233,12 @@ class AnimalDescendanceController extends Controller
         }
 
         $record->update([
-            'padre_id' => $padre->id,
-            'madre_id' => $madre->id,
+            'padre_id' => $padre->id ?? null,
+            'madre_id' => $madre->id ?? null,
+            'padre_nombre' => $validated['padre_nombre'] ?? null,
+            'padre_raza' => $validated['padre_raza'] ?? null,
+            'madre_nombre' => $validated['madre_nombre'] ?? null,
+            'madre_raza' => $validated['madre_raza'] ?? null,
             'fecha_nacimiento' => $validated['fecha_nacimiento'] ?? null,
             'observaciones' => $validated['observaciones'] ?? null,
             'registrado_por' => Auth::id(),

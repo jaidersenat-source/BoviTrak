@@ -1,5 +1,12 @@
 <nav x-data="{ open: false }">
     <div class="flex">
+        <!-- Botón hamburguesa visible en móvil (si el sidebar está fuera) -->
+        <button x-show="!open" x-cloak @click="open = !open" class="absolute top-4 left-4 sm:hidden z-50 p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none transition duration-200">
+            <svg class="h-7 w-7" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                <path :class="{'hidden': open, 'inline-flex': !open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                <path :class="{'hidden': !open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
         <!-- Sidebar -->
         <aside :class="{'-translate-x-full': !open, 'translate-x-0': open}" class="fixed z-40 inset-y-0 left-0 w-64 bg-white border-r border-gray-200 shadow-lg transform transition-transform duration-200 ease-in-out sm:translate-x-0 sm:fixed sm:inset-y-0 sm:left-0 sm:z-40 sm:shadow-none flex flex-col h-screen">
             <div class="flex items-center justify-between h-20 px-6 border-b border-gray-100">
@@ -41,6 +48,15 @@
                         <path d="M3 3h8v8H3V3zM13 3h8v8h-8V3zM3 13h8v8H3v-8zM13 13h8v8h-8v-8z" fill="currentColor" />
                     </svg>
                     Lotes
+                </a>
+
+                <a href="{{ route('admin.historial.index') }}" class="flex items-center px-4 py-3 rounded-lg {{ request()->routeIs('admin.historial.*') ? 'bg-bovi-brown-100 text-bovi-brown-800 font-bold' : 'text-gray-700 hover:bg-bovi-brown-50 hover:text-bovi-brown-700' }} transition-all duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 2H7a2 2 0 00-2 2v16a2 2 0 002 2h10a2 2 0 002-2V8z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 2v6h6" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11h8M8 15h8M8 19h5" />
+                    </svg>
+                    Historial Administrativo
                 </a>
 
                

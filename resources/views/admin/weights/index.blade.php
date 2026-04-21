@@ -102,7 +102,7 @@
                                     placeholder="Ej: 320.50"
                                     class="w-full rounded-xl border bg-gray-50 border-gray-200 px-3.5 py-2.5 text-sm text-gray-900 placeholder-gray-400
                                         focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent focus:bg-white transition-all
-                                        @error('peso') border-red-400 bg-red-50 @enderror"
+                                        @error('peso') @enderror"
                                 >
                                 @error('peso')
                                     <p class="mt-1.5 text-xs text-red-500 flex items-center gap-1">
@@ -125,7 +125,7 @@
                                     max="{{ now()->format('Y-m-d') }}"
                                     class="w-full rounded-xl border bg-gray-50 border-gray-200 px-3.5 py-2.5 text-sm text-gray-900
                                         focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent focus:bg-white transition-all
-                                        @error('measured_at') border-red-400 bg-red-50 @enderror"
+                                        @error('measured_at') @enderror"
                                 >
                                 @error('measured_at')
                                     <p class="mt-1.5 text-xs text-red-500 flex items-center gap-1">
@@ -147,7 +147,7 @@
                                     placeholder="Condición corporal, observaciones, etc."
                                     class="w-full rounded-xl border bg-gray-50 border-gray-200 px-3.5 py-2.5 text-sm text-gray-900 placeholder-gray-400 resize-none
                                         focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent focus:bg-white transition-all
-                                        @error('nota') border-red-400 bg-red-50 @enderror"
+                                        @error('nota') @enderror"
                                 >{{ old('nota') }}</textarea>
                                 @error('nota')
                                     <p class="mt-1.5 text-xs text-red-500 flex items-center gap-1">

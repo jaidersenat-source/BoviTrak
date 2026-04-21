@@ -142,7 +142,17 @@
         .stat-num { font-family: 'Playfair Display', serif; font-weight: 900; color: #2E7D32; }
 
         /* ── Noise texture overlay ── */
-        body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity:.025; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E"); z-index:9999; }
+        body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity:.025; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E"); z-index:0; }
+
+        /* Mobile adjustments */
+        @media (max-width: 767px) {
+            .hero-bg { padding-top: 64px; min-height: auto; padding-bottom: 48px; }
+            .hero-bg .hero-overlay { background: linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0) 100%); }
+            .btn-primary, .btn-outline { width: 100%; display: inline-block; }
+            .btn-primary, .btn-outline { padding: 0.6rem 1rem; border-radius: 12px; font-size: 0.92rem; }
+            .mockup-card .grid, .mockup-card .grid * { max-width: 100%; }
+            .cta-bg .absolute.hidden-sm { display: none; }
+        }
 
         /* ── Custom scrollbar ── */
         ::-webkit-scrollbar { width: 6px; }
@@ -175,7 +185,7 @@
         <!-- CTA -->
         <div class="flex items-center gap-3">
             <a href="{{ route('login') }}" class="hidden md:block text-sm font-medium nav-login">Iniciar sesión</a>
-            <a href="#cta" class="btn-primary text-sm">Comenzar gratis</a>
+            <a href="#cta" class="hidden md:inline-flex btn-primary text-sm">Comenzar gratis</a>
         </div>
     </div>
 </nav>
@@ -222,11 +232,11 @@
 
             <!-- CTA -->
             <div class="flex flex-col sm:flex-row gap-4 mb-4">
-                <a href="{{ route('register') }}" class="btn-primary text-base px-8 py-4">
+                <a href="{{ route('register') }}" class="btn-primary text-base px-8 py-4 w-full sm:w-auto text-center">
                     Probar gratis con mis animales
                 </a>
 
-                <a href="#sistema" class="btn-outline text-base">
+                <a href="#sistema" class="btn-outline text-base px-6 py-4 w-full sm:w-auto text-center">
                     Ver cómo funciona
                 </a>
             </div>
@@ -238,10 +248,7 @@
         </div>
 
         <!-- RIGHT: DASHBOARD -->
-        <div class="hidden md:block">
-            <img src="/img/dashboard.png" 
-                 class="rounded-2xl shadow-2xl transform hover:scale-105 transition duration-500">
-        </div>
+       
 
     </div>
 </section>
@@ -565,9 +572,9 @@
 <section id="cta" class="cta-bg relative py-32 px-6">
     <div class="cta-overlay absolute inset-0"></div>
 
-    <!-- Decorative ring -->
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border border-white/5"></div>
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full border border-white/8"></div>
+    <!-- Decorative ring (hidden on small screens) -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border border-white/5 hidden sm:block"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full border border-white/8 hidden sm:block"></div>
 
     <div class="relative z-10 max-w-3xl mx-auto text-center text-white reveal">
         <span class="text-xs font-semibold tracking-widest uppercase text-acento mb-4 block">Sin tarjeta de crédito</span>
@@ -580,8 +587,8 @@
         </p>
 
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a href="#" class="btn-primary px-10 py-4 text-base">Crear cuenta gratis →</a>
-            <a href="#" class="btn-outline px-8 py-4 text-base">Hablar con ventas</a>
+            <a href="#" class="btn-primary px-10 py-4 text-base w-full sm:w-auto text-center">Crear cuenta gratis →</a>
+            <a href="#" class="btn-outline px-8 py-4 text-base w-full sm:w-auto text-center">Hablar con ventas</a>
         </div>
 
         <!-- Trust badges -->

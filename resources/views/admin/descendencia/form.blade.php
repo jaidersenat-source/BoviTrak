@@ -18,6 +18,13 @@
                 @endforeach
             </select>
             @error('padre_id')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
+            <p class="text-xs text-gray-500 mt-2">Si el padre no está registrado (ej. embrión), puedes ingresar nombre o raza abajo.</p>
+            <div class="grid grid-cols-2 gap-2 mt-2">
+                <input type="text" name="padre_nombre" placeholder="Nombre del padre (opcional)" value="{{ old('padre_nombre', $record->padre_nombre ?? '') }}" class="input-bovi">
+                <input type="text" name="padre_raza" placeholder="Raza del padre (opcional)" value="{{ old('padre_raza', $record->padre_raza ?? '') }}" class="input-bovi">
+            </div>
+            @error('padre_nombre')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
+            @error('padre_raza')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
         </div>
 
         <div>
@@ -31,6 +38,13 @@
                 @endforeach
             </select>
             @error('madre_id')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
+            <p class="text-xs text-gray-500 mt-2">Si la madre no está registrada (ej. embrión), puedes ingresar nombre o raza abajo.</p>
+            <div class="grid grid-cols-2 gap-2 mt-2">
+                <input type="text" name="madre_nombre" placeholder="Nombre de la madre (opcional)" value="{{ old('madre_nombre', $record->madre_nombre ?? '') }}" class="input-bovi">
+                <input type="text" name="madre_raza" placeholder="Raza de la madre (opcional)" value="{{ old('madre_raza', $record->madre_raza ?? '') }}" class="input-bovi">
+            </div>
+            @error('madre_nombre')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
+            @error('madre_raza')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
         </div>
 
         <div>

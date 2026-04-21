@@ -128,4 +128,12 @@ public function getUltimoProcesoReproductivoAttribute(): ?AnimalReproductiveReco
         return $this->hasMany(AnimalDescendance::class, 'madre_id');
     }
 
+    /**
+     * Relación: sesiones de ceba asociadas al animal.
+     */
+    public function cebas(): HasMany
+    {
+        return $this->hasMany(\App\Models\Ceba::class);
+    }
+
 }

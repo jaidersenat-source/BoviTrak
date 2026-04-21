@@ -145,7 +145,7 @@
             </div>
 
             {{-- ══════════════ TABLA — ESCRITORIO ══════════════ --}}
-            <div class="hidden md:block bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div class="hidden md:block bg-white rounded-xl border border-gray-200 shadow-sm overflow-visible">
                 @if($animals->count())
                 <table class="w-full text-sm">
                     <thead>
@@ -257,8 +257,8 @@
                                     </a>
 
                                     {{-- Seguimiento dropdown --}}
-                                    <div class="relative" x-data="{ open: false }">
-                                        <button @click="open = !open" @click.outside="open = false" :aria-expanded="open" class="btn-action bg-amber-50 text-amber-700 hover:bg-amber-100" title="Seguimiento" aria-label="Seguimiento">
+                                    <div class="relative" x-data="{ open: false, menuStyle: '', calcPosition(){ try{ const btn = this.$refs.trigger; const menu = this.$refs.menu; const rect = btn.getBoundingClientRect(); const menuRect = menu.getBoundingClientRect(); const spaceBelow = window.innerHeight - rect.bottom; const spaceAbove = rect.top; let top = rect.bottom + 8; let left = rect.right - menuRect.width; if(left < 8) left = 8; if(spaceBelow < menuRect.height + 16 && spaceAbove > menuRect.height + 16){ top = rect.top - menuRect.height - 8; } this.menuStyle = `left: ${left}px; top: ${top}px;`; }catch(e){ this.menuStyle = '' } }, toggle(){ this.open = !this.open; if(this.open){ this.$nextTick(()=>{ this.calcPosition() }) } }, initListeners(){ window.addEventListener('resize', ()=>{ if(this.open) this.calcPosition() }); window.addEventListener('scroll', ()=>{ if(this.open) this.calcPosition() }, true) } }" x-init="initListeners()">
+                                        <button x-ref="trigger" @click="toggle()" @click.outside="open = false" :aria-expanded="open" class="btn-action bg-amber-50 text-amber-700 hover:bg-amber-100" title="Seguimiento" aria-label="Seguimiento">
                                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                                             </svg>
@@ -268,16 +268,17 @@
                                             </svg>
                                         </button>
 
-                                        <div x-show="open"
-                                             x-transition:enter="transition ease-out duration-150"
-                                             x-transition:enter-start="opacity-0 -translate-y-1"
-                                             x-transition:enter-end="opacity-100 translate-y-0"
-                                             x-transition:leave="transition ease-in duration-100"
-                                             x-transition:leave-start="opacity-100 translate-y-0"
-                                             x-transition:leave-end="opacity-0 -translate-y-1"
-                                             @click.outside="open = false"
-                                             class="absolute right-0 top-full mt-1.5 w-56 bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden"
-                                             style="display: none;">
+                                        <div x-ref="menu" x-show="open"
+                                            x-transition:enter="transition ease-out duration-150"
+                                            x-transition:enter-start="opacity-0 -translate-y-1"
+                                            x-transition:enter-end="opacity-100 translate-y-0"
+                                            x-transition:leave="transition ease-in duration-100"
+                                            x-transition:leave-start="opacity-100 translate-y-0"
+                                            x-transition:leave-end="opacity-0 -translate-y-1"
+                                            @click.outside="open = false"
+                                            :style="menuStyle"
+                                            class="fixed w-56 bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden"
+                                            style="display: none;">
                                             <div class="px-3 py-2 bg-gray-50 border-b border-gray-100">
                                                 <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Seguimiento</p>
                                                 <p class="text-xs text-gray-400 font-mono-dm">{{ $animal->codigo_nfc }}</p>
@@ -314,11 +315,24 @@
                                                     <span class="font-medium">Registro Sanitario</span>
                                                 </a>
 
-                                                <a href="{{ route('animals.reproductive.index', $animal->id) }}" class="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 hover:bg-pink-50 hover:text-pink-700 transition-colors">
-                                                    <span class="w-6 h-6 rounded-md bg-pink-100 flex items-center justify-center shrink-0">
-                                                        <svg class="w-3.5 h-3.5 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-                                                    </span>
-                                                    <span class="font-medium">Proceso Reproductivo</span>
+                                                @if(strtolower($animal->sexo) === 'hembra')
+                                                    <a href="{{ route('animals.reproductive.index', $animal->id) }}" class="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 hover:bg-pink-50 hover:text-pink-700 transition-colors">
+                                                        <span class="w-6 h-6 rounded-md bg-pink-100 flex items-center justify-center shrink-0">
+                                                            <svg class="w-3.5 h-3.5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 11c0-3.866 3.582-7 8-7s8 3.134 8 7c0 1.657-.895 3.157-2.28 4.2C16.2 17.2 14.2 19 12 19s-4.2-1.8-4.72-3.8C3.895 14.157 3 12.657 3 11z"/> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 8c0 .667-.667 1-1 1s-1-.333-1-1 .667-1 1-1 1 .333 1 1zM17 8c0 .667.667 1 1 1s1-.333 1-1-.667-1-1-1-1 .333-1 1z"/> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12c.667 1 1.667 1 3 1s2.333 0 3-1"/> </svg>
+                                                        </span>
+                                                        <span class="font-medium">Proceso Reproductivo</span>
+                                                    </a>
+                                                @endif
+
+                                                <a href="{{ route('animals.ceba.index', $animal->id) }}" class="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 transition-colors">
+                                                                                                        <span class="w-6 h-6 rounded-md bg-red-100 flex items-center justify-center shrink-0">
+                                                                                                                <svg class="w-3.5 h-3.5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                                                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 11c0-3.866 3.582-7 8-7s8 3.134 8 7c0 1.657-.895 3.157-2.28 4.2C16.2 17.2 14.2 19 12 19s-4.2-1.8-4.72-3.8C3.895 14.157 3 12.657 3 11z"/>
+                                                                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 8c0 .667-.667 1-1 1s-1-.333-1-1 .667-1 1-1 1 .333 1 1zM17 8c0 .667.667 1 1 1s1-.333 1-1-.667-1-1-1-1 .333-1 1z"/>
+                                                                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12c.667 1 1.667 1 3 1s2.333 0 3-1"/>
+                                                                                                                </svg>
+                                                                                                        </span>
+                                                    <span class="font-medium">Proceso de Ceba</span>
                                                 </a>
 
                                                 <a href="{{ route('animals.descendencia.index', $animal->id) }}" class="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition-colors">
@@ -331,7 +345,7 @@
                                                 <div class="border-t border-gray-100 my-1"></div>
 
                                                 {{-- Historial Administrativo --}}
-                                                <a href="#" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors group">
+                                                <a href="{{ route('animals.historial', $animal->id) }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors group">
                                                     <span class="w-7 h-7 rounded-lg bg-gray-100 group-hover:bg-gray-200 flex items-center justify-center flex-shrink-0 transition-colors">
                                                         <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
@@ -479,7 +493,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                                 </svg>
                             </button>
-                            <div x-show="open" x-transition class="mt-2 grid grid-cols-2 gap-2" style="display:none;">
+                            <div x-show="open" x-transition class="mt-2 grid grid-cols-2 gap-2" x-cloak>
                                 <a href="{{ route('animals.weights.index', $animal->id) }}"
                                    class="flex items-center gap-2 px-3 py-2.5 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-lg text-xs font-semibold transition-colors">
                                     <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg>
@@ -502,15 +516,39 @@
                                     <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                                     Sanitario
                                 </a>
+                                @if(strtolower($animal->sexo) === 'hembra')
                                 <a href="{{ route('animals.reproductive.index', $animal->id) }}"
                                    class="flex items-center gap-2 px-3 py-2.5 bg-pink-50 hover:bg-pink-100 text-pink-700 rounded-lg text-xs font-semibold transition-colors">
                                     <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
                                     Reproductivo
                                 </a>
+                                @endif
                                 <a href="{{ route('animals.descendencia.index', $animal->id) }}"
                                    class="flex items-center gap-2 px-3 py-2.5 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-lg text-xs font-semibold transition-colors">
                                     <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                     Descendencia
+                                </a>
+
+                                <a href="{{ route('animals.ceba.index', $animal->id) }}"
+                                   class="flex items-center gap-2 px-3 py-2.5 bg-red-50 hover:bg-red-100 text-red-700 rounded-lg text-xs font-semibold transition-colors">
+                                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 11c0-3.866 3.582-7 8-7s8 3.134 8 7c0 1.657-.895 3.157-2.28 4.2C16.2 17.2 14.2 19 12 19s-4.2-1.8-4.72-3.8C3.895 14.157 3 12.657 3 11z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 8c0 .667-.667 1-1 1s-1-.333-1-1 .667-1 1-1 1 .333 1 1zM17 8c0 .667.667 1 1 1s1-.333 1-1-.667-1-1-1-1 .333-1 1z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12c.667 1 1.667 1 3 1s2.333 0 3-1"/>
+                                    </svg>
+                                    Proceso de Ceba
+                                </a>
+
+                                <a href="{{ route('animals.historial', $animal->id) }}" class="col-span-2 flex items-start gap-3 px-3 py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg text-xs font-semibold transition-colors">
+                                    <span class="w-7 h-7 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0 transition-colors">
+                                        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                                        </svg>
+                                    </span>
+                                    <div>
+                                        <p class="font-semibold leading-tight">Historial Administrativo</p>
+                                        <p class="text-xs text-gray-400">Leche, carne, crías, sanidad</p>
+                                    </div>
                                 </a>
                             </div>
                         </div>

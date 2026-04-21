@@ -44,7 +44,7 @@
                 </main>
 
                 <!-- Footer -->
-                <footer class="footer-bovi">
+                <footer class="footer-bovi relative z-0">
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                             <!-- Columna 1: Acerca de (opcional) -->

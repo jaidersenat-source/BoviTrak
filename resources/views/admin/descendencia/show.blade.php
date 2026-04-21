@@ -48,8 +48,18 @@
                         <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Padre (Toro)</p>
                         @if($descendencia->padre)
                             <a href="{{ route('admin.ganado.show', $descendencia->padre) }}" class="font-semibold text-gray-800 hover:underline">{{ $descendencia->padre->nombre ?? $descendencia->padre->codigo_nfc }}</a>
+                            @if(!empty($descendencia->padre_raza))
+                                <p class="text-xs text-gray-500">Raza: {{ $descendencia->padre_raza }}</p>
+                            @endif
                         @else
-                            <p class="text-gray-400 italic">No registrado</p>
+                            @if(!empty($descendencia->padre_nombre) || !empty($descendencia->padre_raza))
+                                <p class="font-semibold text-gray-800">{{ $descendencia->padre_nombre ?? '—' }}</p>
+                                @if(!empty($descendencia->padre_raza))
+                                    <p class="text-xs text-gray-500">Raza: {{ $descendencia->padre_raza }}</p>
+                                @endif
+                            @else
+                                <p class="text-gray-400 italic">No registrado</p>
+                            @endif
                         @endif
                     </div>
 
@@ -57,8 +67,18 @@
                         <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Madre (Vaca)</p>
                         @if($descendencia->madre)
                             <a href="{{ route('admin.ganado.show', $descendencia->madre) }}" class="font-semibold text-gray-800 hover:underline">{{ $descendencia->madre->nombre ?? $descendencia->madre->codigo_nfc }}</a>
+                            @if(!empty($descendencia->madre_raza))
+                                <p class="text-xs text-gray-500">Raza: {{ $descendencia->madre_raza }}</p>
+                            @endif
                         @else
-                            <p class="text-gray-400 italic">No registrada</p>
+                            @if(!empty($descendencia->madre_nombre) || !empty($descendencia->madre_raza))
+                                <p class="font-semibold text-gray-800">{{ $descendencia->madre_nombre ?? '—' }}</p>
+                                @if(!empty($descendencia->madre_raza))
+                                    <p class="text-xs text-gray-500">Raza: {{ $descendencia->madre_raza }}</p>
+                                @endif
+                            @else
+                                <p class="text-gray-400 italic">No registrada</p>
+                            @endif
                         @endif
                     </div>
                 </div>

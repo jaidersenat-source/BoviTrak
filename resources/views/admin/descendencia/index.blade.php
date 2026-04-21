@@ -102,8 +102,18 @@
                                 <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Padre (Toro)</p>
                                 @if($record->padre)
                                     <a href="{{ route('admin.ganado.show', $record->padre) }}" class="font-semibold text-gray-800 hover:underline">{{ $record->padre->nombre ?? $record->padre->codigo_nfc }}</a>
+                                    @if(!empty($record->padre->raza))
+                                        <p class="text-xs text-gray-500">Raza: {{ $record->padre->raza }}</p>
+                                    @endif
                                 @else
-                                    <p class="text-gray-400 italic text-xs">No registrado</p>
+                                    @if(!empty($record->padre_nombre) || !empty($record->padre_raza))
+                                        <p class="font-semibold text-gray-800">{{ $record->padre_nombre ?? '—' }}</p>
+                                        @if(!empty($record->padre_raza))
+                                            <p class="text-xs text-gray-500">Raza: {{ $record->padre_raza }}</p>
+                                        @endif
+                                    @else
+                                        <p class="text-gray-400 italic text-xs">No registrado</p>
+                                    @endif
                                 @endif
                             </div>
 
@@ -111,8 +121,18 @@
                                 <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Madre (Vaca)</p>
                                 @if($record->madre)
                                     <a href="{{ route('admin.ganado.show', $record->madre) }}" class="font-semibold text-gray-800 hover:underline">{{ $record->madre->nombre ?? $record->madre->codigo_nfc }}</a>
+                                    @if(!empty($record->madre->raza))
+                                        <p class="text-xs text-gray-500">Raza: {{ $record->madre->raza }}</p>
+                                    @endif
                                 @else
-                                    <p class="text-gray-400 italic text-xs">No registrado</p>
+                                    @if(!empty($record->madre_nombre) || !empty($record->madre_raza))
+                                        <p class="font-semibold text-gray-800">{{ $record->madre_nombre ?? '—' }}</p>
+                                        @if(!empty($record->madre_raza))
+                                            <p class="text-xs text-gray-500">Raza: {{ $record->madre_raza }}</p>
+                                        @endif
+                                    @else
+                                        <p class="text-gray-400 italic text-xs">No registrado</p>
+                                    @endif
                                 @endif
                             </div>
 
